@@ -113,6 +113,52 @@ export const commands: Command[] = [
     ],
   },
   {
+    name: "browser",
+    category: "setup",
+    description:
+      "Workload-aware browser selection. `auto` (default) picks Vivaldi/Brave/Edge when dev extensions are registered (they honor --load-extension), and prefers Chrome when none are (fastest, most stable). On macOS 26 Brave is demoted due to a known ~7min crash in the 1.89 build. Each browser gets an isolated profile so switching never corrupts prefs.",
+    usage: "cdpilot browser [auto|chrome|brave|vivaldi|chromium|edge]",
+    args: [
+      {
+        name: "name",
+        required: false,
+        description:
+          "Browser to pin. Use 'auto' for smart default, or omit to see current pick + reason.",
+      },
+    ],
+    examples: [
+      {
+        code: "npx cdpilot browser",
+        description: "Show current preference, auto-pick, and reason",
+      },
+      {
+        code: "npx cdpilot browser vivaldi",
+        description: "Pin to Vivaldi (recommended for extension work)",
+      },
+      {
+        code: "npx cdpilot browser auto",
+        description: "Restore workload-aware smart default",
+      },
+    ],
+  },
+  {
+    name: "health",
+    category: "setup",
+    description:
+      "Print a JSON health snapshot: alive, port, project_id, tabs, browser version, today's Brave crash count from macOS DiagnosticReports, stealth state, and uptime warning. Exit codes 0 (alive) / 2 (down) are designed for shell watchdog loops.",
+    usage: "cdpilot health",
+    examples: [
+      {
+        code: "npx cdpilot health",
+        description: "One-shot JSON status",
+      },
+      {
+        code: "until cdpilot health >/dev/null; do cdpilot launch; sleep 2; done",
+        description: "Watchdog loop — auto-relaunch on crash",
+      },
+    ],
+  },
+  {
     name: "proxy",
     category: "setup",
     description:
