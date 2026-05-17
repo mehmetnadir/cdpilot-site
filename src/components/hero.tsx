@@ -38,7 +38,7 @@ export function Hero() {
           className="mb-8 inline-flex items-center gap-2 rounded-full border border-[#22c55e]/20 bg-[#22c55e]/5 px-4 py-1.5 text-sm text-[#22c55e]"
         >
           <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e] animate-pulse" />
-          v0.3.0 on npm
+          v0.5.0 on npm
         </motion.div>
 
         {/* Headline */}

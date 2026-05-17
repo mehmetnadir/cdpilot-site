@@ -1027,13 +1027,13 @@ export const commands: Command[] = [
     name: "cookies",
     category: "network",
     description:
-      "List cookies for the current page or a specific domain.",
-    usage: "cdpilot cookies [<domain>]",
+      "List cookies, or save/load them as JSON. Designed for replaying CF/DataDome clearance cookies across runs — beat the wall once, capture, replay later.",
+    usage: "cdpilot cookies [<domain>] | cookies save <file> [<domain>] | cookies load <file>",
     args: [
       {
-        name: "domain",
+        name: "subcommand or domain",
         required: false,
-        description: "Domain to filter cookies. Shows all cookies if omitted.",
+        description: "'save'/'load' for JSON I/O, or a domain to filter. Omit to list all.",
       },
     ],
     examples: [
@@ -1044,6 +1044,14 @@ export const commands: Command[] = [
       {
         code: "npx cdpilot cookies example.com",
         description: "Show cookies for a specific domain",
+      },
+      {
+        code: "npx cdpilot cookies save clearance.json example.com",
+        description: "Export cookies for a domain to JSON (subdomain-aware)",
+      },
+      {
+        code: "npx cdpilot cookies load clearance.json",
+        description: "Replay saved cookies; verifies accepted count vs file",
       },
     ],
   },
@@ -1479,6 +1487,154 @@ export const commands: Command[] = [
       {
         code: "npx cdpilot close",
         description: "Close the active tab",
+      },
+    ],
+  },
+
+  // ── v0.5.0 — Efficient mode, smart navigation, parallel contexts ──
+  {
+    name: "show",
+    category: "setup",
+    description:
+      "Toggle the visual feedback layer (glow border, fake cursor, click ripples, keystroke display). Default OFF in 0.5.0 for a quiet, professional experience. CDPILOT_MCP_SESSION=1 still keeps glow on for AI sessions automatically.",
+    usage: "cdpilot show [on|off|status]",
+    args: [
+      {
+        name: "mode",
+        required: false,
+        description: "on, off, or status. Omit for status.",
+      },
+    ],
+    examples: [
+      { code: "npx cdpilot show on", description: "Persist visual feedback ON" },
+      { code: "npx cdpilot show off", description: "Persist visual feedback OFF (default)" },
+      { code: "CDPILOT_SHOW=1 cdpilot go example.com", description: "One-shot override per command" },
+    ],
+  },
+  {
+    name: "fast",
+    category: "setup",
+    description:
+      "Fast mode bundle — currently shortens auto-wait timeout (5000ms → 2000ms). Persisted. CDPILOT_WAIT_MS env wins over the mode default if set.",
+    usage: "cdpilot fast [on|off|status]",
+    args: [
+      { name: "mode", required: false, description: "on, off, or status. Omit for status." },
+    ],
+    examples: [
+      { code: "npx cdpilot fast on", description: "Enable fast defaults" },
+      { code: "CDPILOT_WAIT_MS=1000 cdpilot click 'Sign in'", description: "Dial timeout independently" },
+    ],
+  },
+  {
+    name: "wait-for-text",
+    category: "interaction",
+    description:
+      "Adaptive wait for a text fragment to appear anywhere in document.body.innerText. Uses MutationObserver with characterData+subtree, throttled via requestAnimationFrame — catches streaming AI tokens, typewriter effects, and late-loaded banners without paying for every token mutation.",
+    usage: "cdpilot wait-for-text <text> [<timeout_ms>]",
+    args: [
+      { name: "text", required: true, description: "Text fragment to wait for (substring match)" },
+      { name: "timeout_ms", required: false, description: "Max wait in ms (default 10000)" },
+    ],
+    examples: [
+      { code: "npx cdpilot wait-for-text 'Sources'", description: "Wait for citation block in Perplexity" },
+      { code: "npx cdpilot wait-for-text 'Done' 30000", description: "Wait up to 30s for completion text" },
+    ],
+  },
+  {
+    name: "eval-batch",
+    category: "debugging",
+    description:
+      "Evaluate N JS expressions in a single Runtime.evaluate roundtrip. Each runs in its own try/catch so one failure doesn't sink the batch. Typical speedup: 5-30x vs sequential eval when reading many small DOM values. MCP: browser_eval_batch.",
+    usage: "cdpilot eval-batch '<json_array>'",
+    args: [
+      {
+        name: "json_array",
+        required: true,
+        description: "JSON array of JS expressions, e.g. '[\"document.title\",\"location.href\"]'",
+      },
+    ],
+    examples: [
+      {
+        code: "npx cdpilot eval-batch '[\"document.title\",\"document.querySelectorAll(\\\"a\\\").length\"]'",
+        description: "Read title + anchor count in one roundtrip",
+      },
+    ],
+  },
+  {
+    name: "block",
+    category: "network",
+    description:
+      "Block requests by URL pattern via Network.setBlockedURLs. Built-in presets: images, fonts, media, ads. Patterns persist and apply on every subsequent navigation. Opt-in only — blocking changes fingerprint surface, do NOT combine with stealth-mode targets. 3-10x faster load on image-heavy pages.",
+    usage: "cdpilot block [on|off|preset <name>|patterns <p1,p2>|clear]",
+    args: [
+      {
+        name: "subcommand",
+        required: false,
+        description: "on/off/clear, 'preset <name>', or 'patterns <comma-list>'",
+      },
+    ],
+    examples: [
+      { code: "npx cdpilot block preset images", description: "Block all image requests" },
+      { code: "npx cdpilot block patterns '*.gif,*/ads/*'", description: "Custom patterns" },
+      { code: "npx cdpilot block clear", description: "Remove all block rules" },
+    ],
+  },
+  {
+    name: "dismiss",
+    category: "interaction",
+    description:
+      "Heuristic auto-click for 'Stay signed out / No thanks / Continue without account' buttons on LLM chat sites (ChatGPT, Perplexity, Claude.ai, Gemini) that gate access behind a sign-up modal. Built-in EN+TR pattern library with weighted scoring. Hard-coded negative-pattern list ('delete account', 'sign out', 'subscribe', TR equivalents) disqualifies destructive lookalikes — one negative hit and the candidate is out. MCP: browser_dismiss.",
+    usage: "cdpilot dismiss [N|aggressive]",
+    args: [
+      {
+        name: "N or aggressive",
+        required: false,
+        description: "Integer 1-10 for chained modals, or 'aggressive' (up to 5). Default: 1.",
+      },
+    ],
+    examples: [
+      { code: "npx cdpilot dismiss", description: "Dismiss a single sign-up wall" },
+      { code: "npx cdpilot dismiss aggressive", description: "Chain through cookie-banner-then-signup" },
+    ],
+  },
+  {
+    name: "adaptive",
+    category: "stealth",
+    description:
+      "Auto-escalate to stealth mode for hosts that show a CAPTCHA. Persists per-host memory. After every navigation, CAPTCHA detection runs; on a hit, the host is remembered AND the navigation is retried ONCE with stealth on. Conservative: never auto-demotes — once on the list it stays until you 'forget'. Matches the 'run fast, climb walls when seen' philosophy.",
+    usage: "cdpilot adaptive [on|off|status|clear|forget <host>]",
+    args: [
+      {
+        name: "subcommand",
+        required: false,
+        description: "on/off/status/clear, or 'forget <host>' to remove one entry",
+      },
+    ],
+    examples: [
+      { code: "npx cdpilot adaptive on", description: "Enable wall-aware navigation" },
+      { code: "npx cdpilot adaptive status", description: "Show learned host list" },
+      { code: "npx cdpilot adaptive forget example.com", description: "Demote a specific host" },
+    ],
+  },
+  {
+    name: "context",
+    category: "advanced",
+    description:
+      "Browser context pool for true parallelism inside a single browser — Playwright's parallel-tabs model. Each context is an isolated cookie/storage namespace. Run actions against multiple contexts concurrently by setting CDPILOT_TARGET=<target_id> per CLI invocation. The env pin bypasses CWD-keyed session resolution — necessary for parallel workflows where two processes would otherwise race on sessions.json. Missing pin = fail loud (no silent fallback).",
+    usage: "cdpilot context [create|list|close <target_id>]",
+    args: [
+      {
+        name: "subcommand",
+        required: false,
+        description: "create (new isolated context+tab), list (show all targets), close <id>",
+      },
+    ],
+    examples: [
+      { code: "npx cdpilot context create", description: "Allocate a fresh isolated context" },
+      { code: "npx cdpilot context list", description: "Show all targets with their context IDs" },
+      {
+        code: "CDPILOT_TARGET=<id> cdpilot go example.com",
+        description: "Pin all subsequent commands to one context",
       },
     ],
   },
