@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# cdpilot-site
+
+Marketing site and blog for [cdpilot](https://cdpilot.ndr.ist) — zero-dependency browser automation CLI.
+
+**Stack:** Next.js 16 App Router · TypeScript · Tailwind CSS v4 · Geist font
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev    # dev server at http://localhost:3000
+npm run build  # production build
+npm run start  # serve production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Blog Publishing
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Blog posts live in `content/blog/` as Markdown files.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Create a new post
 
-## Learn More
+```bash
+# Create content/blog/my-post-slug.md with this frontmatter:
+```
 
-To learn more about Next.js, take a look at the following resources:
+```yaml
+---
+title: "Post Title"
+slug: "my-post-slug"
+date: "2026-05-18"
+description: "Max 160 chars — unique per post."
+tags: ["browser-automation", "cdpilot"]
+track: "Foundations"              # optional section label
+related_tweet_url: "https://x.com/cdpilot/status/..."  # optional
+faq:
+  - q: "Frequently asked question?"
+    a: "Clear, factual answer."
+draft: false
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Post content in Markdown...
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Frontmatter reference
 
-## Deploy on Vercel
+| Field | Required | Notes |
+|-------|----------|-------|
+| `title` | Yes | Used in `<h1>`, OG title, JSON-LD |
+| `slug` | Yes | Must match filename (without .md) |
+| `date` | Yes | ISO 8601: `2026-05-18` |
+| `description` | Yes | Max 160 chars, used in meta description |
+| `tags` | Yes | Array of strings, used for filtering |
+| `draft` | Yes | `true` hides from listing and sitemap |
+| `track` | No | Section grouping label |
+| `related_tweet_url` | No | Shows X link at bottom of post |
+| `faq` | No | Array of `{q, a}` — generates FAQ JSON-LD |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Blog routes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| URL | Description |
+|-----|-------------|
+| `/blog` | Index with search + tag filter |
+| `/blog/[slug]` | Individual post page |
+| `/blog/rss.xml` | RSS 2.0 feed |
+| `/blog/[slug]/opengraph-image` | Dynamic OG image (1200x630) |
+
+### SEO / GEO checklist per post
+
+- [ ] `description` under 160 characters
+- [ ] At least one `faq` entry (AI search engines prioritize FAQ content)
+- [ ] `date` reflects publication date (affects freshness signals)
+- [ ] Internal links in body (at least 3 links to other cdpilot pages)
+- [ ] External authoritative citations (MDN, RFC, official docs)
+- [ ] `draft: false` when ready to publish
+
+## Deployment
+
+The site deploys to Server 21 at `cdpilot.ndr.ist` (port 3400).
+
+```bash
+npm run build
+# then restart the PM2 process on the server
+```

@@ -8,6 +8,7 @@ const footerLinks = {
   ],
   Resources: [
     { label: "Documentation", href: "/docs" },
+    { label: "Blog", href: "/blog" },
     { label: "npm", href: "https://www.npmjs.com/package/cdpilot" },
     { label: "Contributing", href: "https://github.com/mehmetnadir/cdpilot/blob/main/CONTRIBUTING.md" },
   ],

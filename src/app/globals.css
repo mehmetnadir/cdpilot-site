@@ -95,6 +95,125 @@
   }
 }
 
+/* Blog article prose styles */
+.prose-blog {
+  color: #a1a1aa;
+  line-height: 1.75;
+  font-size: 1rem;
+}
+.prose-blog h2 {
+  color: #fafafa;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.25;
+}
+.prose-blog h3 {
+  color: #fafafa;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+.prose-blog p {
+  margin-bottom: 1.25rem;
+}
+.prose-blog a {
+  color: #22c55e;
+  text-decoration: underline;
+  text-decoration-color: rgba(34,197,94,0.4);
+  text-underline-offset: 3px;
+  transition: color 0.15s, text-decoration-color 0.15s;
+}
+.prose-blog a:hover {
+  color: #4ade80;
+  text-decoration-color: rgba(74,222,128,0.6);
+}
+.prose-blog strong {
+  color: #e4e4e7;
+  font-weight: 600;
+}
+.prose-blog ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.prose-blog ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.prose-blog li {
+  margin-bottom: 0.5rem;
+}
+.prose-blog code:not(pre code) {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.875em;
+  color: #22c55e;
+  background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.15);
+  border-radius: 4px;
+  padding: 0.15em 0.4em;
+}
+.prose-blog pre {
+  background: #141414;
+  border: 1px solid #27272a;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.prose-blog pre code {
+  color: #e4e4e7;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+}
+.prose-blog blockquote {
+  border-left: 3px solid #22c55e;
+  padding-left: 1.25rem;
+  margin-left: 0;
+  color: #71717a;
+  font-style: italic;
+  margin-bottom: 1.25rem;
+}
+.prose-blog table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+}
+.prose-blog th {
+  text-align: left;
+  color: #e4e4e7;
+  font-weight: 600;
+  border-bottom: 1px solid #3f3f46;
+  padding: 0.5rem 0.75rem;
+}
+.prose-blog td {
+  border-bottom: 1px solid #27272a;
+  padding: 0.5rem 0.75rem;
+  color: #a1a1aa;
+}
+.prose-blog tr:last-child td {
+  border-bottom: none;
+}
+.prose-blog hr {
+  border: none;
+  border-top: 1px solid #27272a;
+  margin: 2rem 0;
+}
+.prose-blog img {
+  border-radius: 8px;
+  max-width: 100%;
+  height: auto;
+}
+
 @layer utilities {
   .glow-green {
     box-shadow: 0 0 20px rgba(34, 197, 94, 0.15),

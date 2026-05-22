@@ -7,6 +7,7 @@ import { Comparison } from "@/components/comparison";
 import { AiSection } from "@/components/ai-section";
 import { Pricing } from "@/components/pricing";
 import { Faq } from "@/components/faq";
+import { BlogLatestPosts } from "@/components/blog-latest-posts";
 import { Footer } from "@/components/footer";
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
         <AiSection />
         <Pricing />
         <Faq />
+        <BlogLatestPosts />
       </main>
       <Footer />
     </>

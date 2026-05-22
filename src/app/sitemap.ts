@@ -1,4 +1,5 @@
 import { commands } from "@/data/commands";
+import { getAllPosts } from "@/lib/blog";
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -9,6 +10,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date("2026-04-05"),
     changeFrequency: "monthly" as const,
     priority: 0.7,
+  }));
+
+  const posts = getAllPosts();
+  const blogPages = posts.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
   }));
 
   return [
@@ -24,6 +33,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    },
+    ...blogPages,
     ...commandPages,
   ];
 }

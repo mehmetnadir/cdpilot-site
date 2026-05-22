@@ -27,6 +27,7 @@ export function Nav() {
     { label: "Features", href: "#features" },
     { label: "Pricing", href: "#pricing" },
     { label: "Docs", href: "/docs" },
+    { label: "Blog", href: "/blog" },
     { label: "GitHub", href: "https://github.com/mehmetnadir/cdpilot" },
   ];
 

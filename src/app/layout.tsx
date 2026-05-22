@@ -90,7 +90,7 @@ export default function RootLayout({
               description: "Zero-dependency browser automation CLI with 60+ commands, 10 built-in test assertions, and MCP server for AI agents. 500x fewer tokens than screenshot-based approaches.",
               url: "https://cdpilot.ndr.ist",
               downloadUrl: "https://www.npmjs.com/package/cdpilot",
-              softwareVersion: "0.5.0",
+              softwareVersion: "0.8.0",
               author: { "@type": "Person", name: "Nadir Arslan", url: "https://github.com/mehmetnadir" },
               license: "https://opensource.org/licenses/MIT",
             }),
