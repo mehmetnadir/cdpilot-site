@@ -1182,6 +1182,44 @@ export const commands: Command[] = [
     ],
   },
   {
+    name: "watch",
+    category: "ai",
+    description:
+      "Video understanding via continuous screencast. Streams JPEG frames (Page.startScreencast) into a ring buffer so an AI agent can query a time window and observe motion — animation, mouse cursor, scroll, transitions — that a single screenshot cannot capture. Works on local file:// and online video (YouTube, Vimeo, Twitter, etc.). DRM players (Netflix) render as black frames and are not supported. Zero dependency; Pillow is optional for motion-detection.",
+    usage: "cdpilot watch <start|query|ask|status|stop>",
+    args: [
+      {
+        name: "subcmd",
+        required: true,
+        description:
+          "start <url|file://>, query --at <mm:ss> --window <Ns>, ask <question>, status, stop",
+      },
+    ],
+    flags: ["--at <mm:ss>", "--window <Ns>"],
+    examples: [
+      {
+        code: "npx cdpilot watch start https://youtube.com/watch?v=...",
+        description: "Start the screencast and play an online video",
+      },
+      {
+        code: "npx cdpilot watch start file:///tmp/demo.mp4",
+        description: "Watch a local video file",
+      },
+      {
+        code: "npx cdpilot watch query --at 1:23 --window 5s",
+        description: "Get the frames captured around the 1:23 mark",
+      },
+      {
+        code: 'npx cdpilot watch ask "did the modal slide in?"',
+        description: "Ask about recently captured frames",
+      },
+      {
+        code: "npx cdpilot watch stop",
+        description: "Stop the screencast",
+      },
+    ],
+  },
+  {
     name: "a11y-snapshot",
     category: "ai",
     description:

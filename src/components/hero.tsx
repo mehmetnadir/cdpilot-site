@@ -52,7 +52,7 @@ export function Hero() {
         <p className="mx-auto mt-6 max-w-2xl text-lg text-[#a1a1aa] sm:text-xl">
           Zero dependencies. Raw CDP. Smart interactions — no CSS selectors, no LLM needed.
           <br className="hidden sm:block" />
-          Stealth + adaptive escalation, CAPTCHA solvers, proxy pools, TLS probe.
+          Stealth + adaptive escalation, CAPTCHA solvers, proxy pools, TLS probe, video understanding.
           <br className="hidden sm:block" />
           Built-in MCP server for AI agents. 500x fewer tokens than screenshots.
         </p>
