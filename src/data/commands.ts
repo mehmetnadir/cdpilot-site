@@ -285,6 +285,91 @@ export const commands: Command[] = [
     ],
   },
 
+  {
+    name: "mode",
+    category: "stealth",
+    description:
+      "Three-tier stealth mode — one switch over how much fingerprint surface is patched. 'regular' (default) injects nothing: cleanest and fastest, fewest leaks. 'stealth' injects a light patch (navigator.webdriver, chrome.runtime, permissions only — deliberately omits plugin spoofing, which leaks). 'undetected' injects the full patch (light + plugin array + WebGL vendor + Worker). Default is regular because Stealth Bench V1 found the full patch set alone lowered scores. The adaptive layer learns the right tier per host and escalates on CAPTCHA. Effect applies on the next navigation. Env override: CDPILOT_MODE. MCP: browser_mode.",
+    usage: "cdpilot mode [regular|stealth|undetected]",
+    args: [
+      {
+        name: "tier",
+        required: false,
+        description: "regular, stealth, or undetected. Omit to show the current tier and what it injects.",
+      },
+    ],
+    examples: [
+      { code: "npx cdpilot mode", description: "Show the current tier + what it injects" },
+      { code: "npx cdpilot mode regular", description: "No fingerprint patch — cleanest, fastest (default)" },
+      { code: "npx cdpilot mode undetected", description: "Full patch — escalate only for hard anti-bot targets" },
+    ],
+  },
+  {
+    name: "friction",
+    category: "stealth",
+    description:
+      "Progressive anti-bot resilience probe. Real sites stack defenses incrementally; friction reports the highest active rung and the recommended response policy as JSON. Six levels (low to high): none, rate_limited, soft_captcha, login_wall, otp_sms, hard_block. Bilingual (English + Turkish) DOM heuristics. Read-only — never bypasses anything. Policy: rate_limited triggers automatic exponential backoff + retry; soft_captcha defers to the captcha tools; login_wall / otp_sms / hard_block are flagged for HUMAN handoff, never autonomously solved (a deliberate ethics boundary). MCP: browser_friction.",
+    usage: "cdpilot friction",
+    args: [],
+    examples: [
+      { code: "npx cdpilot friction", description: "Print the current friction rung + response policy as JSON" },
+    ],
+  },
+  {
+    name: "press-hold",
+    category: "stealth",
+    description:
+      "PerimeterX / HUMAN 'Press & Hold' behavioral challenge solver. This challenge is not token-based, so there is no provider to call — the only solution is a real press → hold → release gesture, emitted via CDP Input events: a Gaussian-randomized ~3-7s hold with ±1-2px micro-jitter while the button is held. Auto-locates the #px-captcha widget, or pass an explicit selector. captcha-solve auto-routes here when it detects a perimeterx challenge. MCP: browser_press_hold.",
+    usage: "cdpilot press-hold [<selector>]",
+    args: [
+      {
+        name: "selector",
+        required: false,
+        description: "CSS selector for the hold target. Omit to auto-find the px-captcha button.",
+      },
+    ],
+    examples: [
+      { code: "npx cdpilot press-hold", description: "Auto-find and solve the px-captcha press-and-hold" },
+      { code: 'npx cdpilot press-hold "#px-captcha button"', description: "Target an explicit selector" },
+    ],
+  },
+  {
+    name: "captcha-solve",
+    category: "stealth",
+    description:
+      "Image-based CAPTCHA solver, complementing the token solvers. Auto-detects and routes (including to press-hold for PerimeterX). Amazon classic image CAPTCHA (the 'Type the characters you see' rate-limit page) is OCR'd offline via the optional amazoncaptcha library (pure-Python + Pillow, MIT) — if not installed the command reports it and exits cleanly, no hard dependency. BYOK providers capsolver / 2captcha use image-to-text APIs via CAPSOLVER_API_KEY / TWOCAPTCHA_API_KEY. MCP: browser_captcha_solve.",
+    usage: "cdpilot captcha-solve [--provider amazon-local|capsolver|2captcha]",
+    args: [
+      {
+        name: "--provider",
+        required: false,
+        description: "Solver provider. Default: amazon-local (offline OCR via optional amazoncaptcha lib).",
+      },
+    ],
+    flags: ["--provider amazon-local", "--provider capsolver", "--provider 2captcha"],
+    examples: [
+      { code: "npx cdpilot captcha-solve", description: "Auto-detect and route the image CAPTCHA solve" },
+      { code: "npx cdpilot captcha-solve --provider capsolver", description: "Use a BYOK image-to-text provider" },
+    ],
+  },
+  {
+    name: "profile",
+    category: "setup",
+    description:
+      "Profile maintenance. 'profile warm' ages the browser profile by browsing low-risk sites to build cookie/history age, which nudges reCAPTCHA v3's behavioral score upward over time. Slow by design — run it ahead of a session, not inline.",
+    usage: "cdpilot profile warm",
+    args: [
+      {
+        name: "subcmd",
+        required: true,
+        description: "warm — age the profile for a better reCAPTCHA v3 score.",
+      },
+    ],
+    examples: [
+      { code: "npx cdpilot profile warm", description: "Age the profile ahead of a reCAPTCHA v3 session" },
+    ],
+  },
+
   // ── Navigation ─────────────────────────────────────────
   {
     name: "go",

@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "cdpilot — Browser automation in 50KB | Raw CDP, stealth, MCP for AI agents",
   description:
-    "Zero-dependency browser automation CLI built on raw CDP. 65+ commands, video understanding (watch motion via screencast), stealth + adaptive escalation, CAPTCHA solvers (2captcha / anti-captcha / capmonster), per-host cookie persistence, named proxy pools, TLS fingerprint probe, MCP server for AI agents. 500x fewer tokens than screenshot-based tools. No Puppeteer. No Playwright. No Selenium.",
+    "Zero-dependency browser automation CLI built on raw CDP. 70+ commands, progressive anti-bot friction ladder, three-tier stealth mode, CAPTCHA + press-and-hold solvers, video understanding, per-host cookie persistence, named proxy pools, TLS fingerprint probe, MCP server for AI agents. 500x fewer tokens than screenshot-based tools. No Puppeteer. No Playwright. No Selenium.",
   keywords: [
     "browser automation",
     "CDP",
@@ -30,6 +30,10 @@ export const metadata: Metadata = {
     "cloudflare bypass",
     "datadome",
     "adaptive escalation",
+    "friction ladder",
+    "progressive resilience",
+    "press and hold",
+    "perimeterx",
     "proxy rotation",
     "TLS fingerprint",
     "cookie management",
@@ -63,7 +67,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "cdpilot — Raw CDP browser automation in 50KB",
     description:
-      "Zero-dependency CLI. Raw CDP, 65+ commands, video understanding, stealth + adaptive escalation, CAPTCHA solvers, proxy pools, TLS probe, MCP server. No Puppeteer/Playwright/Selenium.",
+      "Zero-dependency CLI. Raw CDP, 70+ commands, progressive anti-bot friction ladder, three-tier stealth, CAPTCHA + press-and-hold solvers, proxy pools, MCP server. No Puppeteer/Playwright/Selenium.",
     url: "https://cdpilot.ndr.ist",
     siteName: "cdpilot",
     type: "website",
@@ -73,7 +77,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "cdpilot — Raw CDP browser automation in 50KB",
     description:
-      "65+ commands, video understanding, stealth + adaptive, CAPTCHA solvers, proxy pools, TLS probe, MCP server. 500x fewer tokens. Zero dependencies. No Puppeteer/Playwright/Selenium.",
+      "70+ commands, progressive anti-bot friction ladder, three-tier stealth, CAPTCHA + press-and-hold solvers, proxy pools, MCP server. 500x fewer tokens. Zero dependencies. No Puppeteer/Playwright/Selenium.",
     creator: "@mehmetnadir",
   },
 };
@@ -99,7 +103,7 @@ export default function RootLayout({
               applicationCategory: "DeveloperApplication",
               operatingSystem: "macOS, Linux, Windows",
               offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-              description: "Zero-dependency browser automation CLI built on raw CDP. 65+ commands, video understanding via screencast, stealth + adaptive escalation, CAPTCHA solvers, per-host cookie persistence, named proxy pools, TLS fingerprint probe, and MCP server for AI agents. 500x fewer tokens than screenshot-based approaches.",
+              description: "Zero-dependency browser automation CLI built on raw CDP. 70+ commands, progressive anti-bot friction ladder, three-tier stealth mode, CAPTCHA + press-and-hold solvers, video understanding via screencast, per-host cookie persistence, named proxy pools, TLS fingerprint probe, and MCP server for AI agents. 500x fewer tokens than screenshot-based approaches.",
               url: "https://cdpilot.ndr.ist",
               downloadUrl: "https://www.npmjs.com/package/cdpilot",
               softwareVersion: "0.8.0",
