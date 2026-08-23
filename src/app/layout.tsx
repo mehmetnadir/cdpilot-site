@@ -106,7 +106,7 @@ export default function RootLayout({
               description: "Zero-dependency browser automation CLI built on raw CDP. 70+ commands, progressive anti-bot friction ladder, three-tier stealth mode, CAPTCHA + press-and-hold solvers, video understanding via screencast, per-host cookie persistence, named proxy pools, TLS fingerprint probe, and MCP server for AI agents. 500x fewer tokens than screenshot-based approaches.",
               url: "https://cdpilot.ndr.ist",
               downloadUrl: "https://www.npmjs.com/package/cdpilot",
-              softwareVersion: "0.8.0",
+              softwareVersion: "0.9.0",
               author: { "@type": "Person", name: "Nadir Arslan", url: "https://github.com/mehmetnadir" },
               license: "https://opensource.org/licenses/MIT",
             }),
