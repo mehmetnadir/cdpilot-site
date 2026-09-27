@@ -153,10 +153,6 @@ const weaknesses = [
     body: "cdpilot can't click or type inside an <iframe> yet (tracked as GitHub issue #1 / the Roadmap's \"iframe support\" item). Shadow DOM traversal shipped in the smart commands, but frames are a separate gap. Playwright, Puppeteer, and Selenium all support frame-scoped interaction today.",
   },
   {
-    title: "No universal --timeout flag yet",
-    body: "Timeouts are configurable per feature (fast mode, CDPILOT_WAIT_MS, auto-wait), but there's no single flag that caps every command uniformly (tracked as issue #2, planned; not in v0.9.1). Playwright's API has a global default timeout built in.",
-  },
-  {
     title: "Heavy JS-challenge anti-bot walls are still hard",
     body: "cdpilot's own Stealth Bench V1 (v0.5.3, 80 tasks) is explicit about this: PerimeterX 2/18 (11%), GeeTest 0/4 (0%), Kasada 0/1 (0%), Akamai 1/6 (17%). cdpilot describes itself as \"an avoidance engine, not a CAPTCHA solver\" — when a challenge blocks progress and can't be bypassed, the task fails, and that's counted honestly rather than hidden.",
   },

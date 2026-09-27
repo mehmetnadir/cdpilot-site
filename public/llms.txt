@@ -52,11 +52,12 @@ project `.cursor/mcp.json`) both read the same `mcpServers` schema:
 - `cdpilot cookies save|load --host <host>` — cache and replay per-host cookies (e.g. a passed Cloudflare/DataDome challenge)
 - `cdpilot context create` + `CDPILOT_TARGET` — isolated parallel browser contexts in a single browser
 - `cdpilot mcp` — start the built-in MCP server for AI agents
+- `cdpilot --timeout <seconds> <command>` (or `CDPILOT_TIMEOUT`) — cap any command's wall-clock; exits 124 on expiry
+- Page commands start the browser if it is not running (`CDPILOT_NO_AUTOLAUNCH=1` restores the old error)
 
 ## Honest limitations
 
 - No iframe interaction yet (GitHub issue #1). Shadow DOM: the text-based smart commands (`smart-click`, `smart-fill`, `smart-select`) search inside open shadow roots; CSS-selector commands do not pierce them yet (issue #3)
-- No single universal `--timeout` flag across every command yet
 - Deliberately does not attach to your existing, already-logged-in browser session — it
   launches an isolated profile by design, and reuses sessions via `cookies save/load` instead
 - Heavy JS-challenge anti-bot vendors are still hard: per its own Stealth Bench V1,
