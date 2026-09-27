@@ -154,7 +154,7 @@ const weaknesses = [
   },
   {
     title: "No universal --timeout flag yet",
-    body: "Timeouts are configurable per feature (fast mode, CDPILOT_WAIT_MS, auto-wait), but there's no single flag that caps every command uniformly (tracked as issue #2, part of the v0.9.1 connection-resilience work). Playwright's API has a global default timeout built in.",
+    body: "Timeouts are configurable per feature (fast mode, CDPILOT_WAIT_MS, auto-wait), but there's no single flag that caps every command uniformly (tracked as issue #2, planned; not in v0.9.1). Playwright's API has a global default timeout built in.",
   },
   {
     title: "Heavy JS-challenge anti-bot walls are still hard",
