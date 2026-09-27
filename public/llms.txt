@@ -55,7 +55,7 @@ project `.cursor/mcp.json`) both read the same `mcpServers` schema:
 
 ## Honest limitations
 
-- No iframe interaction yet (tracked as a roadmap item; Shadow DOM traversal is already supported)
+- No iframe interaction yet (GitHub issue #1). Shadow DOM: the text-based smart commands (`smart-click`, `smart-fill`, `smart-select`) search inside open shadow roots; CSS-selector commands do not pierce them yet (issue #3)
 - No single universal `--timeout` flag across every command yet
 - Deliberately does not attach to your existing, already-logged-in browser session — it
   launches an isolated profile by design, and reuses sessions via `cookies save/load` instead
