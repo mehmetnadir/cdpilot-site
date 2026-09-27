@@ -29,7 +29,7 @@ const tiers: PricingTier[] = [
       "60+ CLI commands",
       "10 built-in test assertions",
       "Built-in MCP server (Claude Code, Cursor)",
-      "a11y-snapshot (500x fewer tokens)",
+      "a11y-snapshot (structured text, no vision model needed)",
       "Token-efficient screenshots (element crop, JPEG)",
       "Multi-project browser isolation",
       "Visual feedback (green glow, cursor, ripples)",

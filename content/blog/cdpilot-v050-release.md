@@ -16,6 +16,12 @@ faq:
 draft: false
 ---
 
+> **Editor's note (2026-09-27):** This post reflects the state of the project at v0.5.0
+> (May 2026), including its "under 50KB" size claims. The core has grown considerably since
+> then — see the [README](https://github.com/mehmetnadir/cdpilot#readme) and
+> [CHANGELOG](https://github.com/mehmetnadir/cdpilot/blob/main/CHANGELOG.md) for current,
+> non-decaying figures. The rest of this post is left unchanged for historical accuracy.
+
 cdpilot v0.5.0 is now available on [npm](https://www.npmjs.com/package/cdpilot). This release is the biggest since launch, shipping five production-grade capabilities that make cdpilot the default choice for AI-agent browser automation.
 
 ## Efficient Mode: Performance First

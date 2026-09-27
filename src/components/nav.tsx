@@ -25,6 +25,7 @@ export function Nav() {
 
   const links = [
     { label: "Features", href: "#features" },
+    { label: "Compare", href: "/compare" },
     { label: "Pricing", href: "#pricing" },
     { label: "Docs", href: "/docs" },
     { label: "Blog", href: "/blog" },

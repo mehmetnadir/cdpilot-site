@@ -28,9 +28,9 @@ export function Footer() {
               cdpilot
             </Link>
             <p className="mt-3 text-sm text-[#a1a1aa]">
-              Browser automation in 50KB.
+              Browser automation in one file.
               <br />
-              Zero dependencies. Pure CDP.
+              Zero npm dependencies. Pure CDP.
             </p>
             <div className="mt-5 flex items-center gap-3">
               <Link

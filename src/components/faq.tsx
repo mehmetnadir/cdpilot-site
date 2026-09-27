@@ -18,7 +18,7 @@ const faqs = [
   {
     question: "How is this different from Playwright or Puppeteer?",
     answer:
-      "cdpilot is a CLI-first tool with zero dependencies (50KB vs 300MB+). It talks directly to Chrome DevTools Protocol over HTTP/WebSocket using Python's standard library. No Node.js runtime needed for the core, no browser downloads, and it includes a built-in MCP server for AI agents.",
+      "cdpilot is a CLI-first tool with zero npm dependencies (one Python file vs 200MB+ of node_modules and browser downloads). It talks directly to Chrome DevTools Protocol over HTTP/WebSocket using a small Python core. No Node.js runtime needed to drive the core, no bundled browser downloads, and it includes a built-in MCP server for AI agents.",
   },
   {
     question: "Does it work with Claude Code?",
@@ -28,7 +28,7 @@ const faqs = [
   {
     question: "Is it really zero dependencies?",
     answer:
-      "Yes. The Python core uses only the standard library (urllib, asyncio, json). The Node.js entry point is a thin wrapper that finds Python and spawns the process. No pip install, no node_modules bloat.",
+      "Zero npm dependencies, yes. The Node.js entry point is a thin wrapper that finds Python and spawns the process. The Python core uses the standard library plus one package, websockets, which the setup wizard auto-installs on first launch — no manual pip install, no node_modules bloat.",
   },
   {
     question: "Can I use it for web scraping?",
@@ -38,7 +38,7 @@ const faqs = [
   {
     question: "Is it free?",
     answer:
-      "The core CLI with all 40+ commands and the MCP server is completely free and open source (MIT license). We plan to offer Pro and Cloud tiers with advanced features like stealth mode, parallel orchestration, and hosted sessions.",
+      "The core CLI with all 70+ commands and the MCP server is completely free and open source (MIT license). We plan to offer Pro and Cloud tiers with advanced features like parallel orchestration and hosted sessions.",
   },
   {
     question: "What's the MCP server?",
@@ -48,7 +48,7 @@ const faqs = [
   {
     question: "Does it work on Windows and Linux?",
     answer:
-      "Yes. cdpilot supports macOS, Windows, and Linux. The browser detection automatically finds Chrome/Brave/Chromium installations on each platform. Python 3 is the only requirement.",
+      "Yes. cdpilot supports macOS, Windows, and Linux. The browser detection automatically finds Chrome/Brave/Chromium installations on each platform. Requirements: Node.js 18+ and Python 3.10+.",
   },
 ];
 

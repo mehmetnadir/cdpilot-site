@@ -57,7 +57,9 @@ When we started, cdpilot was a developer CLI. Then LLMs started needing to brows
 
 Screenshot-based tools pass a full image to the language model — thousands of tokens for a single page observation. HTML dumps are worse: a typical news article DOM is 50,000+ tokens.
 
-cdpilot's **a11y tree snapshot** extracts only the semantic structure of the page — buttons, links, inputs, headings — with short `@ref` identifiers for clicking. A typical page observation is 600-1,200 tokens. That is a [500x reduction](https://cdpilot.ndr.ist/blog/cdp-vs-playwright-benchmark) compared to screenshot-based approaches.
+cdpilot's **a11y tree snapshot** extracts only the semantic structure of the page — buttons, links, inputs, headings — with short `@ref` identifiers for clicking. No vision model has to interpret pixels to find them.
+
+**Correction (2026-09-27):** this post used to claim a flat "500x reduction" versus screenshots, linking to a benchmark post that has since been [retracted](https://cdpilot.ndr.ist/blog/cdp-vs-playwright-benchmark) — we could not find data supporting that number. What we actually measured on four real pages: the a11y-snapshot is 1.4-42x smaller than raw HTML, and, against a small screenshot, cheaper only on form-heavy pages (~7x) — on link/content-dense pages the screenshot was smaller. See the retraction for the full table and methodology.
 
 The MCP server ships built-in. Add cdpilot to Claude Code or any MCP client in one line:
 

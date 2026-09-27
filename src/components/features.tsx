@@ -24,7 +24,7 @@ const features: Feature[] = [
     number: "01",
     title: "Navigate & Interact",
     description:
-      "go, click, fill, type, submit, hover, drag, scroll, and 40+ more commands. Full browser control from your terminal.",
+      "go, click, fill, type, submit, hover, drag, scroll, and dozens more (70+ commands total). Full browser control from your terminal.",
     icon: <MousePointerClick className="h-5 w-5" />,
   },
   {

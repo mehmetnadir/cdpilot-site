@@ -45,7 +45,7 @@ export function Hero() {
         <h1 className="text-5xl font-bold leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl">
           Browser automation
           <br />
-          <span className="text-gradient-green">in 50KB</span>
+          <span className="text-gradient-green">in one file</span>
         </h1>
 
         {/* Sub-headline */}
@@ -54,7 +54,7 @@ export function Hero() {
           <br className="hidden sm:block" />
           Progressive anti-bot resilience: three-tier stealth, CAPTCHA + press-and-hold solvers, proxy pools, video understanding.
           <br className="hidden sm:block" />
-          Built-in MCP server for AI agents. 500x fewer tokens than screenshots.
+          Built-in MCP server for AI agents. Structured a11y-tree snapshots, no vision model needed.
         </p>
 
         {/* CTAs */}

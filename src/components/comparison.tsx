@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Check, X, Minus } from "lucide-react";
+import Link from "next/link";
 
 interface Tool {
   name: string;
@@ -11,7 +12,7 @@ interface Tool {
   deps: string;
   setupTime: string;
   cliBased: boolean | "partial";
-  mcpServer: boolean;
+  mcpServer: boolean | "partial";
   aiReady: boolean | "partial";
 }
 
@@ -19,8 +20,8 @@ const tools: Tool[] = [
   {
     name: "cdpilot",
     highlight: true,
-    installSize: "50KB",
-    deps: "0",
+    installSize: "1 file, no node_modules",
+    deps: "0 npm",
     setupTime: "Instant",
     cliBased: true,
     mcpServer: true,
@@ -28,70 +29,30 @@ const tools: Tool[] = [
   },
   {
     name: "Playwright",
-    installSize: "~300MB",
-    deps: "200+",
+    installSize: "200MB+ (w/ browsers)",
+    deps: "30+",
     setupTime: "Minutes",
     cliBased: "partial",
-    mcpServer: false,
+    mcpServer: "partial",
     aiReady: "partial",
   },
   {
     name: "Puppeteer",
-    installSize: "~400MB",
-    deps: "80+",
+    installSize: "400MB+ (w/ Chromium)",
+    deps: "50+",
     setupTime: "Minutes",
     cliBased: false,
     mcpServer: false,
     aiReady: false,
   },
   {
-    name: "Browser Use",
-    installSize: "~150MB",
-    deps: "40+",
-    setupTime: "Minutes",
+    name: "Selenium",
+    installSize: "100MB+ (+ drivers)",
+    deps: "Java + drivers",
+    setupTime: "Painful",
     cliBased: false,
     mcpServer: false,
-    aiReady: true,
-  },
-];
-
-interface CostCard {
-  title: string;
-  tokens: string;
-  cost: string;
-  llmCalls: string;
-  time: string;
-  description: string;
-  isCdpilot: boolean;
-}
-
-const costCards: CostCard[] = [
-  {
-    title: "Computer Use",
-    tokens: "250,000 tokens",
-    cost: "~$0.75/task",
-    llmCalls: "8+ LLM calls",
-    time: "~30 seconds",
-    description: "Screenshot-based pixel analysis",
-    isCdpilot: false,
-  },
-  {
-    title: "Playwright MCP",
-    tokens: "114,000 tokens",
-    cost: "~$0.34/task",
-    llmCalls: "4+ LLM calls",
-    time: "~15 seconds",
-    description: "DOM dump CSS selectors",
-    isCdpilot: false,
-  },
-  {
-    title: "cdpilot",
-    tokens: "500 tokens",
-    cost: "~$0.0015/task",
-    llmCalls: "2 LLM calls",
-    time: "~3 seconds",
-    description: "Structured a11y @ref navigation",
-    isCdpilot: true,
+    aiReady: false,
   },
 ];
 
@@ -106,9 +67,6 @@ function CellIcon({ value }: { value: boolean | "partial" }) {
 export function Comparison() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
-
-  const costRef = useRef<HTMLDivElement>(null);
-  const costInView = useInView(costRef, { once: true, margin: "-80px" });
 
   return (
     <section ref={ref} className="relative py-24 px-6">
@@ -186,81 +144,47 @@ export function Comparison() {
               ))}
             </tbody>
           </table>
+          <p className="mt-4 text-xs text-[#52525b]">
+            Figures per each tool&apos;s own README/npm registry metadata. Full breakdown with
+            sources and a browser-use MCP row on the{" "}
+            <Link href="/compare" className="text-[#22c55e] hover:underline">
+              compare page
+            </Link>
+            .
+          </p>
         </motion.div>
 
-        {/* Token Cost Section */}
-        <div ref={costRef} className="mt-24">
+        {/* Measured token footprint */}
+        <div className="mt-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={costInView ? { opacity: 1, y: 0 } : {}}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5 }}
             className="text-center"
           >
             <h2 className="text-3xl font-bold text-white sm:text-4xl">
-              The real cost of{" "}
-              <span className="text-gradient-green">browser automation</span>
+              Structured text,{" "}
+              <span className="text-gradient-green">no vision model needed</span>
             </h2>
             <p className="mt-4 text-[#a1a1aa]">
-              Same task: Search Google, click first result
+              a11y-snapshot returns semantic elements with short @ref handles — the agent
+              acts on text, not pixels.
             </p>
           </motion.div>
-
-          <div className="mt-12 flex flex-col gap-6 sm:flex-row">
-            {costCards.map((card, i) => (
-              <motion.div
-                key={card.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={costInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: i * 0.12, duration: 0.5 }}
-                className={`relative flex-1 rounded-2xl border p-6 ${
-                  card.isCdpilot
-                    ? "border-[#22c55e]/40 bg-[#22c55e]/5"
-                    : "border-[#27272a] bg-[#141414]/50"
-                }`}
-                style={
-                  card.isCdpilot
-                    ? { boxShadow: "0 0 24px rgba(34,197,94,0.18)" }
-                    : {}
-                }
-              >
-                {card.isCdpilot && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center rounded-full bg-[#22c55e] px-3 py-1 text-xs font-semibold text-[#0a0a0a]">
-                    500x cheaper
-                  </span>
-                )}
-                <h3
-                  className={`text-lg font-semibold ${
-                    card.isCdpilot ? "text-[#22c55e]" : "text-white"
-                  }`}
-                >
-                  {card.title}
-                </h3>
-
-                <div className="mt-5 space-y-3">
-                  <div>
-                    <p className="text-2xl font-bold text-white">{card.tokens}</p>
-                    <p className="mt-0.5 text-sm text-[#a1a1aa]">{card.cost}</p>
-                  </div>
-                  <div className="h-px bg-[#27272a]" />
-                  <ul className="space-y-2 text-sm text-[#d4d4d8]">
-                    <li>{card.llmCalls}</li>
-                    <li>{card.time}</li>
-                    <li className="text-[#a1a1aa]">{card.description}</li>
-                  </ul>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={costInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            className="mt-12 text-center text-2xl font-bold text-white sm:text-3xl"
-          >
-            500x fewer tokens.{" "}
-            <span className="text-gradient-green">Same result.</span>
-          </motion.p>
+          <p className="mt-6 text-center text-sm text-[#a1a1aa]">
+            Measured on four real pages (Hacker News, Wikipedia, GitHub, saucedemo):
+            a11y-snapshot ran 1.4-42x smaller than raw HTML on the same page. Against a
+            small screenshot it was cheaper only on the form-heavy page — on
+            link/content-dense pages the screenshot was smaller. Full numbers and
+            methodology in our{" "}
+            <Link
+              href="/blog/cdp-vs-playwright-benchmark"
+              className="text-[#22c55e] hover:underline"
+            >
+              retraction of an earlier, unmeasured &ldquo;500x&rdquo; claim
+            </Link>
+            .
+          </p>
         </div>
       </div>
     </section>

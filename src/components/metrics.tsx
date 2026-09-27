@@ -11,9 +11,9 @@ interface Metric {
 }
 
 const metrics: Metric[] = [
-  { value: "50KB", numericValue: 50, suffix: "KB", label: "Install size" },
-  { value: "40+", numericValue: 40, suffix: "+", label: "CLI commands" },
-  { value: "0", numericValue: 0, label: "Dependencies" },
+  { value: "1 file", label: "Core architecture" },
+  { value: "70+", numericValue: 70, suffix: "+", label: "CLI commands" },
+  { value: "0", numericValue: 0, label: "npm dependencies" },
   { value: "MCP", label: "AI agent ready" },
 ];
 
@@ -30,10 +30,7 @@ function AnimatedCounter({
 
   useEffect(() => {
     if (!isInView) return;
-    if (target === 0) {
-      setCount(0);
-      return;
-    }
+    if (target === 0) return; // count already starts at 0, nothing to animate
 
     let current = 0;
     const step = Math.max(1, Math.floor(target / 30));

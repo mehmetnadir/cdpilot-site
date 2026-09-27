@@ -1,0 +1,73 @@
+# cdpilot
+
+> cdpilot is a zero-npm-dependency browser automation CLI for Chrome/Brave/Chromium, built directly on the raw Chrome DevTools Protocol (CDP) instead of Playwright, Puppeteer, or Selenium. It ships as a single Python core file plus a small Node.js launcher (~0.6MB npm package, no node_modules tree), exposes 70+ CLI commands, and includes a built-in MCP server (42 tools) so AI coding agents — Claude Code, Cursor, Windsurf, or any MCP client — can browse, click, fill forms, and read pages via structured accessibility snapshots instead of screenshots (structured text with @ref handles the agent can act on directly, no vision model needed). It also has LLM-free "smart" commands (click/fill by visible text, no CSS selectors, no LLM call needed), 10 built-in test assertions, and a progressive anti-bot layer (three-tier stealth, CAPTCHA + press-and-hold solvers, friction-ladder detection). MIT licensed, free and open source.
+
+## Install
+
+```bash
+# no install needed
+npx cdpilot launch      # start an isolated Chrome/Brave session with CDP enabled
+npx cdpilot go https://example.com
+npx cdpilot shot         # screenshot
+
+# or install globally
+npm i -g cdpilot
+```
+
+Requirements: Node.js 18+, Python 3.10+, and one of Brave/Chrome/Chromium. The Python
+`websockets` package (cdpilot's only non-stdlib dependency) is auto-installed by the
+setup wizard on first launch — there are 0 npm dependencies.
+
+## MCP configuration
+
+Claude Code (`.mcp.json` or `claude mcp add`) and Cursor (`~/.cursor/mcp.json` or a
+project `.cursor/mcp.json`) both read the same `mcpServers` schema:
+
+```json
+{
+  "mcpServers": {
+    "cdpilot": {
+      "command": "npx",
+      "args": ["cdpilot", "mcp"]
+    }
+  }
+}
+```
+
+## Key commands
+
+- `cdpilot launch` — start a browser with CDP enabled, in an isolated profile
+- `cdpilot setup` — auto-detect installed browsers, create the isolated profile
+- `cdpilot go <url>` — navigate
+- `cdpilot shot [file]` / `cdpilot pdf [file]` — screenshot / save page as PDF
+- `cdpilot click <selector>` / `cdpilot smart-click <text>` — click by CSS selector, or by visible text with no LLM call
+- `cdpilot fill <selector> <value>` / `cdpilot smart-fill <label> <value>` — set an input's value
+- `cdpilot a11y-snapshot` — structured accessibility-tree snapshot with `@ref` navigation; measured 1.4-42x smaller than raw HTML across four sample pages (methodology and full numbers: [retraction notice](https://cdpilot.ndr.ist/blog/cdp-vs-playwright-benchmark))
+- `cdpilot eval <js>` / `cdpilot eval-batch <json>` — run JavaScript, or N expressions in one CDP round trip
+- `cdpilot test [--watch]` / `cdpilot trace open <run>` — run `*.cdpt.js` test files and open a time-travel trace viewer
+- `cdpilot assert ...` — 10 built-in test assertions (url, title, count, value, attr, visible/hidden, screenshot-diff, ...)
+- `cdpilot watch start <url>` — continuous screencast so an agent can observe motion, not just a still frame
+- `cdpilot mode [regular|stealth|undetected]` — three-tier anti-fingerprint stealth switch
+- `cdpilot friction` — read-only progressive anti-bot detection (rate-limit → CAPTCHA → login wall → hard block)
+- `cdpilot cookies save|load --host <host>` — cache and replay per-host cookies (e.g. a passed Cloudflare/DataDome challenge)
+- `cdpilot context create` + `CDPILOT_TARGET` — isolated parallel browser contexts in a single browser
+- `cdpilot mcp` — start the built-in MCP server for AI agents
+
+## Honest limitations
+
+- No iframe interaction yet (tracked as a roadmap item; Shadow DOM traversal is already supported)
+- No single universal `--timeout` flag across every command yet
+- Deliberately does not attach to your existing, already-logged-in browser session — it
+  launches an isolated profile by design, and reuses sessions via `cookies save/load` instead
+- Heavy JS-challenge anti-bot vendors are still hard: per its own Stealth Bench V1,
+  PerimeterX 2/18 (11%), GeeTest 0/4 (0%), Kasada 0/1 (0%), Akamai 1/6 (17%) — cdpilot
+  is an avoidance engine, not a CAPTCHA solver, and counts a blocked task as a failure
+
+## Links
+
+- [GitHub repository](https://github.com/mehmetnadir/cdpilot)
+- [npm package](https://www.npmjs.com/package/cdpilot)
+- [Documentation](https://cdpilot.ndr.ist/docs)
+- [Comparison: cdpilot vs Playwright vs Puppeteer vs Selenium vs browser-use](https://cdpilot.ndr.ist/compare)
+- [Blog / changelog](https://cdpilot.ndr.ist/blog)
+- [CHANGELOG](https://github.com/mehmetnadir/cdpilot/blob/main/CHANGELOG.md)
