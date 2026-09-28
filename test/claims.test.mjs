@@ -4,8 +4,9 @@
 // HTML, and a small screenshot is cheaper on most content-heavy pages.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
+import { execFileSync } from "node:child_process";
 
 const ROOT = new URL("..", import.meta.url).pathname;
 
@@ -73,4 +74,67 @@ test("hero badge and structured data show the same version", () => {
   const schema = (layout.match(/softwareVersion: "(\d+\.\d+\.\d+)"/) || [])[1];
   assert.ok(badge && schema, "version spots not found");
   assert.equal(badge, schema);
+});
+
+// 2026-09-28: guard against commands.ts describing CLI syntax the cdpilot
+// README never shipped (PR #33 added the same guard for the plugin skill —
+// "invents no commands beyond the README's" — this is the site-docs version).
+// Reads the cdpilot repo's README off origin/main (via `git show`), not the
+// sibling checkout's working tree, which can be on an older commit than
+// origin/main (verified 2026-09-28: the local checkout was missing the
+// bot-auth/WebMCP sections that are already merged on origin/main).
+// A handful of pre-existing commands predate this guard and aren't spelled
+// out as "cdpilot <name>" (or backticked) anywhere in the root README today
+// -- they're allowlisted by name so a genuinely NEW undocumented command
+// still fails loud instead of hiding behind them.
+const PREDATES_README_GUARD = new Set([
+  "glow", "download", "ext-remove", "wait", "click-ref", "batch", "shot-annotated",
+]);
+
+function readCdpilotReadmeFromOriginMain() {
+  const repo = process.env.CDPILOT_REPO_PATH || "/Users/nadir/01dev/cdpilot";
+  if (!existsSync(join(repo, ".git"))) return null;
+  try {
+    return execFileSync("git", ["-C", repo, "show", "origin/main:README.md"], {
+      encoding: "utf8",
+    });
+  } catch {
+    return null; // no such repo/remote/ref in this environment (e.g. CI)
+  }
+}
+
+test("commands.ts entries outside 0.9.4-pending markers are documented in the cdpilot README", () => {
+  const readme = readCdpilotReadmeFromOriginMain();
+  if (!readme) {
+    // No sibling cdpilot checkout (with an origin/main ref) in this
+    // environment -- nothing to diff against, so there is nothing this test
+    // can safely assert.
+    return;
+  }
+
+  const commandsSrc = readFileSync(join(ROOT, "src", "data", "commands.ts"), "utf8");
+  // Marker-text based (not tied to `//` vs `/* */`) so it matches a pending
+  // block regardless of whether it's also commented out to stay inert on the
+  // live site (see compare/page.tsx for the same convention).
+  const withoutPending = commandsSrc.replace(
+    /<!-- 0\.9\.4-pending -->[\s\S]*?<!-- \/0\.9\.4-pending -->/g,
+    ""
+  );
+
+  // A Command entry looks like `name: "x",\n    category: "y"`; this excludes
+  // Category objects (no `category` field) and CommandArg objects (`required`
+  // follows `name`, not `category`).
+  const names = [...withoutPending.matchAll(/name:\s*"([^"]+)",\s*\n\s*category:\s*"/g)].map(
+    (m) => m[1]
+  );
+  assert.ok(names.length > 70, "sanity: command extraction found too few entries -- regex broke?");
+
+  const missing = names.filter(
+    (n) =>
+      !PREDATES_README_GUARD.has(n) &&
+      !readme.includes(`cdpilot ${n}`) &&
+      !readme.includes(`\`${n}\``) &&
+      !readme.includes(`\`${n} `)
+  );
+  assert.deepEqual(missing, []);
 });

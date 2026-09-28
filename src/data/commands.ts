@@ -46,6 +46,7 @@ export const commands: Command[] = [
     description:
       "Start browser with CDP enabled. Uses an isolated profile so your personal browser is never touched.",
     usage: "cdpilot launch",
+    flags: ["--bot-auth", "--webmcp", "--no-webmcp"],
     examples: [
       {
         code: "npx cdpilot launch",
@@ -58,6 +59,14 @@ export const commands: Command[] = [
       {
         code: "CDP_PORT=9333 npx cdpilot launch",
         description: "Launch on a custom CDP port",
+      },
+      {
+        code: "npx cdpilot launch --bot-auth",
+        description: "Sign every request with an Ed25519 HTTP Message Signature (RFC 9421, Web Bot Auth)",
+      },
+      {
+        code: "npx cdpilot launch --webmcp",
+        description: "Start with the WebMCP chrome flag on, saved for this project (see the tools command)",
       },
     ],
   },
@@ -100,6 +109,47 @@ export const commands: Command[] = [
       },
     ],
   },
+  /* <!-- 0.9.4-pending -->
+  PR #26 (unmerged): https://github.com/mehmetnadir/cdpilot/pull/26 —
+  uncomment (or delete this whole comment) once it ships in 0.9.4.
+  {
+    name: "connect",
+    category: "setup",
+    description:
+      "PENDING for 0.9.4 (PR #26, not yet merged). Attach to a browser you started yourself (real profile, logged-in sessions) instead of cdpilot's isolated profile, so a human can solve a CAPTCHA/login wall and the agent continues in the same browser. Only 127.0.0.1/localhost endpoints are accepted; a remote endpoint exits 2. --auto finds the DevToolsActivePort file in Chrome/Brave/Vivaldi/Edge profile directories (the browser must already have remote debugging enabled). A connected browser is registered external: stop disconnects instead of killing it, idle auto-close never closes it, and auto-launch never starts a replacement. Stealth injections are not applied to it automatically. MCP: browser_connect.",
+    usage: "cdpilot connect [<port> | <ws-url> | --auto]",
+    args: [
+      {
+        name: "port | ws-url | --auto",
+        required: false,
+        description: "A localhost CDP port, a full ws:// URL, or --auto to search known browser profile directories.",
+      },
+    ],
+    examples: [
+      {
+        code: "npx cdpilot connect --auto",
+        description: "Find and attach to an already-running Chrome/Brave/Vivaldi/Edge with remote debugging on",
+      },
+      {
+        code: "npx cdpilot connect 9222",
+        description: "Attach to a browser exposing CDP on localhost:9222",
+      },
+    ],
+  },
+  {
+    name: "disconnect",
+    category: "setup",
+    description:
+      "PENDING for 0.9.4 (PR #26, not yet merged). Detach from a browser attached with connect, without closing it. MCP: browser_disconnect.",
+    usage: "cdpilot disconnect",
+    examples: [
+      {
+        code: "npx cdpilot disconnect",
+        description: "Detach from the connected browser, leaving it open",
+      },
+    ],
+  },
+  <!-- /0.9.4-pending --> */
   {
     name: "version",
     category: "setup",
@@ -350,6 +400,39 @@ export const commands: Command[] = [
     examples: [
       { code: "npx cdpilot captcha-solve", description: "Auto-detect and route the image CAPTCHA solve" },
       { code: "npx cdpilot captcha-solve --provider capsolver", description: "Use a BYOK image-to-text provider" },
+    ],
+  },
+  {
+    name: "bot-auth",
+    category: "stealth",
+    description:
+      "Web Bot Auth — the opposite of stealth. Signs every request the browser makes with an Ed25519 HTTP Message Signature (RFC 9421, draft-meunier-web-bot-auth-architecture-05), so a site or Cloudflare in front of it can verify which agent sent it; reproduces Cloudflare's own reference implementation's Ed25519 test vectors byte for byte and was verified live against Cloudflare's test site. Needs the optional `cryptography` package (`pip install cryptography`) for the Python cdpilot runs on; every other command works without it. Enabled per-launch with `launch --bot-auth` (or `CDPILOT_BOT_AUTH=1`), which starts a detached signer alongside the browser.",
+    usage: "cdpilot bot-auth <init|status|directory|format> [args...]",
+    args: [
+      {
+        name: "subcmd",
+        required: true,
+        description:
+          "init --agent-url <https-origin> [--force]; status; directory [--headers] [--authority <host>] [--ttl <seconds>] [--content-digest] [--json]; or format [dict|legacy]",
+      },
+    ],
+    examples: [
+      {
+        code: "npx cdpilot bot-auth init --agent-url https://your-domain.com",
+        description: "Generate the Ed25519 key once, written to CDPILOT_HOME/bot-auth/ed25519.key (mode 0600)",
+      },
+      {
+        code: "npx cdpilot bot-auth directory --headers",
+        description: "Print the signed JWKS + headers to serve at /.well-known/http-message-signatures-directory",
+      },
+      {
+        code: "npx cdpilot bot-auth status",
+        description: "Show the agent URL, keyid, and whether the signer is running",
+      },
+      {
+        code: "npx cdpilot bot-auth format dict",
+        description: "Switch to the dictionary Signature-Agent form (default is the legacy form Cloudflare's verifier accepts)",
+      },
     ],
   },
   {
@@ -1305,6 +1388,39 @@ export const commands: Command[] = [
       {
         code: "npx cdpilot watch stop",
         description: "Stop the screencast",
+      },
+    ],
+  },
+  {
+    name: "tools",
+    category: "ai",
+    description:
+      "WebMCP bridge. Lists and calls the tools a page registers on document.modelContext (imperative registerTool(), or declarative <form toolname>), through the browser's own getTools()/executeTool(), evaluated in cdpilot's own isolated world (no Runtime.enable) so the list follows reloads/navigations and a page script cannot add tools, change results, or see the calls. Needs a browser started with launch --webmcp (Chrome 146+, chrome://flags/#enable-webmcp-testing). tools call checks arguments against the tool's inputSchema and exits 1 on a mismatch, unknown tool, or tool error. MCP: browser_site_tools / browser_site_tool_call.",
+    usage: "cdpilot tools <list|call> [args...]",
+    args: [
+      {
+        name: "subcmd",
+        required: true,
+        description:
+          "list [--json], or call <name> [json | --arg k=v ...] [--frame <url-part>]",
+      },
+    ],
+    examples: [
+      {
+        code: "npx cdpilot launch --webmcp",
+        description: "Start the browser with the WebMCP flag on (saved for this project)",
+      },
+      {
+        code: "npx cdpilot tools list",
+        description: "List the page's tools: name, title, description, input schema, annotations",
+      },
+      {
+        code: 'npx cdpilot tools call add_to_cart \'{"sku":"A1","qty":2}\'',
+        description: "Call a tool with a JSON argument object",
+      },
+      {
+        code: "npx cdpilot tools call add_to_cart --arg sku=A1 --arg qty=2",
+        description: "Call a tool with --arg key=value pairs instead of JSON",
       },
     ],
   },
