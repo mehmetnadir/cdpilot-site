@@ -106,7 +106,7 @@ export default function RootLayout({
               description: "A lightweight Playwright alternative — zero-dependency browser automation CLI built on raw CDP. 70+ commands, progressive anti-bot friction ladder, three-tier stealth mode, CAPTCHA + press-and-hold solvers, video understanding via screencast, per-host cookie persistence, named proxy pools, TLS fingerprint probe, and MCP server for AI agents. Structured a11y-tree snapshots the agent can act on directly — no vision model needed.",
               url: "https://cdpilot.ndr.ist",
               downloadUrl: "https://www.npmjs.com/package/cdpilot",
-              softwareVersion: "0.9.2",
+              softwareVersion: "0.9.3",
               author: { "@type": "Person", name: "Nadir Arslan", url: "https://github.com/mehmetnadir" },
               license: "https://opensource.org/licenses/MIT",
             }),

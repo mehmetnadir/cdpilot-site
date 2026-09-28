@@ -517,6 +517,10 @@ export const commands: Command[] = [
         code: 'npx cdpilot click "#login-btn"',
         description: "Click an element by ID",
       },
+      {
+        code: 'npx cdpilot click "iframe#card >>> #pay-btn"',
+        description: "Click inside an iframe (cross-origin too); chain >>> for nested frames",
+      },
     ],
   },
   {
@@ -1450,7 +1454,7 @@ export const commands: Command[] = [
     name: "frame",
     category: "advanced",
     description:
-      "Access iframes and Shadow DOM. List iframes, evaluate JS inside them, or read shadow root content.",
+      "Access iframes and Shadow DOM. List iframes, evaluate JS inside one (--frame), or read shadow root content. To click or type inside a frame, use >>> or --frame on the element command.",
     usage: "cdpilot frame <subcmd> [args...]",
     args: [
       {
@@ -1466,8 +1470,8 @@ export const commands: Command[] = [
         description: "List all iframes on the page",
       },
       {
-        code: 'npx cdpilot frame eval "document.title"',
-        description: "Evaluate JS in the frame context",
+        code: 'npx cdpilot frame eval --frame "#card" "document.title"',
+        description: "Evaluate JS inside that iframe's own page",
       },
       {
         code: 'npx cdpilot frame shadow "#my-component"',

@@ -57,7 +57,7 @@ project `.cursor/mcp.json`) both read the same `mcpServers` schema:
 
 ## Honest limitations
 
-- No iframe interaction yet (GitHub issue #1). Shadow DOM: the text-based smart commands (`smart-click`, `smart-fill`, `smart-select`) search inside open shadow roots; CSS-selector commands do not pierce them yet (issue #3)
+- iframes (since 0.9.3): `click`, `fill`, `type`, `hover` and the smart commands reach into iframes with `>>>` (`click "iframe#card >>> #pay"`) or `--frame`, cross-origin and nested frames included; `a11y-snapshot` refs cover the top page only. Shadow DOM: the text-based smart commands (`smart-click`, `smart-fill`, `smart-select`) search inside open shadow roots; CSS-selector commands do not pierce them yet (issue #3)
 - Deliberately does not attach to your existing, already-logged-in browser session — it
   launches an isolated profile by design, and reuses sessions via `cookies save/load` instead
 - Heavy JS-challenge anti-bot vendors are still hard: per its own Stealth Bench V1,

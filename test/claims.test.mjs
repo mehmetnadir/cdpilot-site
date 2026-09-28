@@ -57,3 +57,20 @@ test("compare page is in the sitemap", () => {
   const sitemap = readFileSync(join(ROOT, "src", "app", "sitemap.ts"), "utf8");
   assert.match(sitemap, /\/compare`/);
 });
+
+// 2026-09-28: iframes shipped in 0.9.3 (issue #1); the "no iframe support"
+// limitation must not come back, and the two version spots must agree.
+test("site copy does not say iframes are unsupported", () => {
+  const hits = COPY.filter((f) => /no iframe (interaction|support)|can't click or type inside an <iframe>/i
+    .test(readFileSync(f, "utf8")));
+  assert.deepEqual(hits.map((f) => f.replace(ROOT, "")), []);
+});
+
+test("hero badge and structured data show the same version", () => {
+  const hero = readFileSync(join(ROOT, "src", "components", "hero.tsx"), "utf8");
+  const layout = readFileSync(join(ROOT, "src", "app", "layout.tsx"), "utf8");
+  const badge = (hero.match(/v(\d+\.\d+\.\d+) on npm/) || [])[1];
+  const schema = (layout.match(/softwareVersion: "(\d+\.\d+\.\d+)"/) || [])[1];
+  assert.ok(badge && schema, "version spots not found");
+  assert.equal(badge, schema);
+});

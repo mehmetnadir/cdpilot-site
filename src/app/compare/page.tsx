@@ -149,8 +149,8 @@ const faqs = [
 
 const weaknesses = [
   {
-    title: "No iframe interaction yet",
-    body: "cdpilot can't click or type inside an <iframe> yet (tracked as GitHub issue #1 / the Roadmap's \"iframe support\" item). Shadow DOM traversal shipped in the smart commands, but frames are a separate gap. Playwright, Puppeteer, and Selenium all support frame-scoped interaction today.",
+    title: "CSS selectors don't pierce shadow DOM yet",
+    body: "The smart commands (smart-click, smart-fill, smart-select) search open shadow roots, but CSS-selector commands like click and fill don't pierce them yet (GitHub issue #3); Playwright's locators do by default. iframes are covered since 0.9.3: >>> or --frame reaches elements inside frames, cross-origin and nested ones included.",
   },
   {
     title: "Heavy JS-challenge anti-bot walls are still hard",
