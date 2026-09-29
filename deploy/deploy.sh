@@ -2,7 +2,8 @@
 # cdpilot-site deploy script — Server 21
 set -e
 
-SERVER="root@10.0.0.21"
+# DEPLOY_HOST=root@100.117.187.26 (Tailscale) when the 10.0.0.x VPN is down
+SERVER="${DEPLOY_HOST:-root@10.0.0.21}"
 SSH_PORT=2222
 REMOTE_DIR="/opt/cdpilot-site"
 LOCAL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
@@ -48,6 +49,11 @@ if [ -n "$ASSET" ]; then
     echo "❌ Static asset $ASSET returned $CODE — site would render white."
     exit 1
   fi
+fi
+
+echo "E2E smoke..."
+if [ -x "$LOCAL_DIR/scripts/e2e-smoke.sh" ]; then
+  "$LOCAL_DIR/scripts/e2e-smoke.sh" "https://cdpilot.ndr.ist" en || echo "⚠️  E2E smoke failed — deploy partially successful"
 fi
 
 echo "Done! https://cdpilot.ndr.ist"
