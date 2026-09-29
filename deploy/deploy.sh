@@ -17,6 +17,7 @@ rsync -avz --delete \
   --exclude node_modules \
   --exclude .git \
   --exclude .next/cache \
+  --exclude .next/dev \
   -e "ssh -p $SSH_PORT" \
   "$LOCAL_DIR/" "$SERVER:$REMOTE_DIR/"
 
