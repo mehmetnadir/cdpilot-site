@@ -138,3 +138,35 @@ test("commands.ts entries outside 0.9.4-pending markers are documented in the cd
   );
   assert.deepEqual(missing, []);
 });
+
+test("examples page is in the sitemap", () => {
+  const sitemap = readFileSync(join(ROOT, "src", "app", "sitemap.ts"), "utf8");
+  assert.match(sitemap, /\/examples`/);
+});
+
+function readCdpilotFileFromOriginMain(relativePath) {
+  const repo = process.env.CDPILOT_REPO_PATH || "/Users/nadir/01dev/cdpilot";
+  if (!existsSync(join(repo, ".git"))) return undefined; // no sibling repo (e.g. CI): skip
+  try {
+    return execFileSync("git", ["-C", repo, "show", `origin/main:${relativePath}`], {
+      encoding: "utf8",
+    });
+  } catch {
+    return null; // the repo is here but the file is not on main: that is a failure
+  }
+}
+
+test("every example's transcript excerpt appears verbatim in its origin/main transcript", async () => {
+  const { examples } = await import("../src/data/examples.ts");
+  assert.ok(examples.length >= 8, `sanity: expected at least 8 examples, got ${examples.length}`);
+
+  for (const ex of examples) {
+    const transcript = readCdpilotFileFromOriginMain(`examples/${ex.name}/output/transcript.txt`);
+    if (transcript === undefined) return;
+    assert.ok(transcript !== null, `examples/${ex.name}/output/transcript.txt is not on cdpilot main`);
+    assert.ok(
+      transcript.includes(ex.transcriptExcerpt),
+      `Transcript excerpt for example "${ex.name}" is not verbatim in its origin/main transcript`
+    );
+  }
+});

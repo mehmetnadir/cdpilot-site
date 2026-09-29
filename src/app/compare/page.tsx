@@ -118,17 +118,14 @@ const rows: Row[] = [
     selenium: "Partial — Chrome-only, via the debuggerAddress capability",
     browserUse: "Depends on its Playwright backend — not documented as a first-class feature",
   },
-  /* <!-- 0.9.4-pending -->
-  PR #26 (unmerged): https://github.com/mehmetnadir/cdpilot/pull/26 — drop this row if it doesn't ship in 0.9.4.
   {
-    label: "Attach to your own running browser (pending 0.9.4)",
-    cdpilot: "Coming in 0.9.4 (PR #26, unmerged): cdpilot connect [<port>|<ws-url>|--auto] attaches to a Chrome/Brave/Vivaldi/Edge you already started — a human solves the CAPTCHA/login wall, the agent continues in the same browser (localhost only). Until it ships, only the CDP_PORT workaround above applies.",
+    label: "Attach to your own running browser",
+    cdpilot: "cdpilot connect [<port>|<ws-url>|--auto] attaches to a Chrome/Brave/Vivaldi/Edge you already started — a human solves the CAPTCHA/login wall, the agent continues in the same browser (localhost only).",
     playwright: "Yes — chromium.connectOverCDP()",
     puppeteer: "Yes — puppeteer.connect({ browserWSEndpoint })",
     selenium: "Partial — Chrome-only, via the debuggerAddress capability",
     browserUse: "Depends on its Playwright backend — not documented as a first-class feature",
   },
-  <!-- /0.9.4-pending --> */
   {
     label: "License",
     cdpilot: "MIT",
@@ -156,13 +153,10 @@ const faqs = [
     q: "Can cdpilot attach to my existing, already logged-in Chrome session?",
     a: "Not by default. cdpilot launches its own isolated browser profile (~/.cdpilot/profile) so your personal browser — cookies, history, passwords — is never touched by automation. Its commands talk to whatever CDP endpoint CDP_PORT points at, so a browser you started yourself with --remote-debugging-port can be driven too; that path is not documented yet, and recent Chrome versions only allow remote debugging on a non-default --user-data-dir. To carry a session across runs without attaching (e.g. a passed Cloudflare/DataDome challenge), use cdpilot cookies save/load. Playwright and Puppeteer expose attaching as a first-class API: connectOverCDP() / connect().",
   },
-  /* <!-- 0.9.4-pending -->
-  PR #26 (unmerged): https://github.com/mehmetnadir/cdpilot/pull/26 — drop this entry if it doesn't ship in 0.9.4.
   {
-    q: "Will cdpilot ever support attaching to my own running Chrome?",
-    a: "Yes — cdpilot connect [<port>|<ws-url>|--auto] is in progress for 0.9.4 (PR #26, not yet merged). It attaches to a Chrome/Brave/Vivaldi/Edge you already started so a human can clear a CAPTCHA or login wall and the agent continues in the same, already-authenticated browser; only localhost endpoints are accepted. Until it merges, the answer above (isolated profile + cookies save/load) still applies.",
+    q: "Does cdpilot support attaching to my own running Chrome?",
+    a: "Yes — cdpilot connect [<port>|<ws-url>|--auto] attaches to a Chrome/Brave/Vivaldi/Edge you already started so a human can clear a CAPTCHA or login wall and the agent continues in the same, already-authenticated browser; only localhost endpoints are accepted.",
   },
-  <!-- /0.9.4-pending --> */
 ];
 
 const weaknesses = [

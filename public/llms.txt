@@ -56,31 +56,25 @@ project `.cursor/mcp.json`) both read the same `mcpServers` schema:
 - Page commands start the browser if it is not running (`CDPILOT_NO_AUTOLAUNCH=1` restores the old error)
 - `cdpilot launch --bot-auth` / `cdpilot bot-auth init|status|directory|format` — Web Bot Auth: sign every browser request with an Ed25519 HTTP Message Signature (RFC 9421, draft-meunier-web-bot-auth-architecture-05), so a site or Cloudflare can verify which agent sent it; verified live against Cloudflare's own test site
 - `cdpilot launch --webmcp` then `cdpilot tools list` / `cdpilot tools call <name>` — WebMCP bridge: list and call the tools a page registers on `document.modelContext`, evaluated in cdpilot's own isolated world (no `Runtime.enable`) so the page can't see or alter the calls
+- `cdpilot browser install chrome-for-testing` — Chrome for Testing (versioned, non-auto-updating Chrome build for extension development)
 
 ## Reliability & stealth (0.9.4)
 
 - Frame commands (`click`, `fill`, `frame eval`, ...) no longer send CDP `Runtime.enable` — the best-known automation signal that Cloudflare Turnstile and DataDome watch for, and Turnstile itself runs inside an iframe
 - No `window.__cdpilot_waitFor` helper left on the page during `click`/`fill` — a page script (including a bot check running in an iframe) can no longer see it
 - `CDPILOT_HOME` is now honored by the Node launcher (`bin/cdpilot.js`) everywhere — profile dir, port registry, preflight marker — matching the Python core, so an isolated `CDPILOT_HOME` run never leaks into `~/.cdpilot`
-
-<!-- 0.9.4-pending -->
-## Pending for 0.9.4 (not yet merged — drop this section if it doesn't ship)
-
-- `cdpilot connect [<port>|<ws-url>|--auto]` / `cdpilot disconnect` — attach to a Chrome/Brave/Vivaldi/Edge you already started yourself instead of launching an isolated profile, for human-in-the-loop CAPTCHA/login flows (localhost only, PR #26)
-- Real mouse clicks (`--entropy=on`, frame clicks, the X bot) hold the button 40-120ms instead of releasing within a few ms, closer to a human press (`CDPILOT_PRESS_MS=min-max` to tune, PR #34)
-- Claude Code plugin marketplace: `/plugin marketplace add mehmetnadir/cdpilot` then `/plugin install cdpilot@cdpilot` (PR #33)
-- `.mcpb` bundle (MCP Bundle spec) for one-file MCP server installation (`npm run build:mcpb`, PR #33)
-<!-- /0.9.4-pending -->
+- `cdpilot connect [<port>|<ws-url>|--auto]` / `cdpilot disconnect` — attach to a Chrome/Brave/Vivaldi/Edge you already started yourself instead of launching an isolated profile, for human-in-the-loop CAPTCHA/login flows (localhost only)
+- Real mouse clicks (`--entropy=on`, frame clicks, the X bot) hold the button 40-120ms instead of releasing within a few ms, closer to a human press (`CDPILOT_PRESS_MS=min-max` to tune)
+- Claude Code plugin marketplace: `/plugin marketplace add mehmetnadir/cdpilot` then `/plugin install cdpilot@cdpilot`
+- `.mcpb` bundle (MCP Bundle spec) for one-file MCP server installation (`npm run build:mcpb`)
+- Chrome for Testing (`cdpilot browser install chrome-for-testing`, for extension development)
 
 ## Honest limitations
 
 - iframes (since 0.9.3): `click`, `fill`, `type`, `hover` and the smart commands reach into iframes with `>>>` (`click "iframe#card >>> #pay"`) or `--frame`, cross-origin and nested frames included; `a11y-snapshot` refs cover the top page only. Shadow DOM: the text-based smart commands (`smart-click`, `smart-fill`, `smart-select`) search inside open shadow roots; CSS-selector commands do not pierce them yet (issue #3)
 - Deliberately does not attach to your existing, already-logged-in browser session — it
   launches an isolated profile by design, and reuses sessions via `cookies save/load` instead
-<!-- 0.9.4-pending -->
-  (pending 0.9.4, PR #26, unmerged: `cdpilot connect` will add an opt-in way to attach to a
-  browser you started yourself, for human-in-the-loop CAPTCHA/login flows)
-<!-- /0.9.4-pending -->
+  (or attach to a browser you started yourself with `cdpilot connect [<port>|<ws-url>|--auto]`, for human-in-the-loop CAPTCHA/login flows)
 - Heavy JS-challenge anti-bot vendors are still hard: per its own Stealth Bench V1,
   PerimeterX 2/18 (11%), GeeTest 0/4 (0%), Kasada 0/1 (0%), Akamai 1/6 (17%) — cdpilot
   is an avoidance engine, not a CAPTCHA solver, and counts a blocked task as a failure

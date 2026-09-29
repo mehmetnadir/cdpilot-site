@@ -109,14 +109,11 @@ export const commands: Command[] = [
       },
     ],
   },
-  /* <!-- 0.9.4-pending -->
-  PR #26 (unmerged): https://github.com/mehmetnadir/cdpilot/pull/26 —
-  uncomment (or delete this whole comment) once it ships in 0.9.4.
   {
     name: "connect",
     category: "setup",
     description:
-      "PENDING for 0.9.4 (PR #26, not yet merged). Attach to a browser you started yourself (real profile, logged-in sessions) instead of cdpilot's isolated profile, so a human can solve a CAPTCHA/login wall and the agent continues in the same browser. Only 127.0.0.1/localhost endpoints are accepted; a remote endpoint exits 2. --auto finds the DevToolsActivePort file in Chrome/Brave/Vivaldi/Edge profile directories (the browser must already have remote debugging enabled). A connected browser is registered external: stop disconnects instead of killing it, idle auto-close never closes it, and auto-launch never starts a replacement. Stealth injections are not applied to it automatically. MCP: browser_connect.",
+      "Attach to a browser you started yourself (real profile, logged-in sessions) instead of cdpilot's isolated profile, so a human can solve a CAPTCHA/login wall and the agent continues in the same browser. Only 127.0.0.1/localhost endpoints are accepted; a remote endpoint exits 2. --auto finds the DevToolsActivePort file in Chrome/Brave/Vivaldi/Edge profile directories (the browser must already have remote debugging enabled). A connected browser is registered external: stop disconnects instead of killing it, idle auto-close never closes it, and auto-launch never starts a replacement. Stealth injections are not applied to it automatically. MCP: browser_connect.",
     usage: "cdpilot connect [<port> | <ws-url> | --auto]",
     args: [
       {
@@ -140,7 +137,7 @@ export const commands: Command[] = [
     name: "disconnect",
     category: "setup",
     description:
-      "PENDING for 0.9.4 (PR #26, not yet merged). Detach from a browser attached with connect, without closing it. MCP: browser_disconnect.",
+      "Detach from a browser attached with connect, without closing it. MCP: browser_disconnect.",
     usage: "cdpilot disconnect",
     examples: [
       {
@@ -149,7 +146,6 @@ export const commands: Command[] = [
       },
     ],
   },
-  <!-- /0.9.4-pending --> */
   {
     name: "version",
     category: "setup",
@@ -166,20 +162,24 @@ export const commands: Command[] = [
     name: "browser",
     category: "setup",
     description:
-      "Workload-aware browser selection. `auto` (default) picks Vivaldi/Brave/Edge when dev extensions are registered (they honor --load-extension), and prefers Chrome when none are (fastest, most stable). On macOS 26 Brave is demoted due to a known ~7min crash in the 1.89 build. Each browser gets an isolated profile so switching never corrupts prefs.",
-    usage: "cdpilot browser [auto|chrome|brave|vivaldi|chromium|edge]",
+      "Workload-aware browser selection. `auto` (default) picks Vivaldi/Brave/Edge when dev extensions are registered (they honor --load-extension), and prefers Chrome when none are (fastest, most stable). Also supports installing Chrome for Testing (`cdpilot browser install chrome-for-testing`) for extension development. On macOS 26 Brave is demoted due to a known ~7min crash in the 1.89 build. Each browser gets an isolated profile so switching never corrupts prefs.",
+    usage: "cdpilot browser [auto|chrome|chrome-for-testing|brave|vivaldi|chromium|edge|install chrome-for-testing]",
     args: [
       {
         name: "name",
         required: false,
         description:
-          "Browser to pin. Use 'auto' for smart default, or omit to see current pick + reason.",
+          "Browser to pin, or install command ('install chrome-for-testing'). Use 'auto' for smart default, or omit to see current pick + reason.",
       },
     ],
     examples: [
       {
         code: "npx cdpilot browser",
         description: "Show current preference, auto-pick, and reason",
+      },
+      {
+        code: "npx cdpilot browser install chrome-for-testing",
+        description: "Install Chrome for Testing (latest Stable) for extension development",
       },
       {
         code: "npx cdpilot browser vivaldi",
