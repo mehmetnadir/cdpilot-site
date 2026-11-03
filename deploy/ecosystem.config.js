@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
     name: 'cdpilot-site',
-    script: '.next/standalone/01dev/cdpilot-site/server.js',
+    script: '.next/standalone/server.js',
     cwd: '/opt/cdpilot-site',
     env: {
       NODE_ENV: 'production',

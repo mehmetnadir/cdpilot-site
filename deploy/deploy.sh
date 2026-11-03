@@ -11,6 +11,8 @@ LOCAL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 echo "Building..."
 cd "$LOCAL_DIR"
 npm run build
+# Next 16.4 izleme kökü proje dizinidir: server.js standalone kökündedir (ecosystem bu yolu koşar).
+[ -f .next/standalone/server.js ] || { echo "✗ .next/standalone/server.js yok — ecosystem yolu tutmaz"; exit 1; }
 
 echo "Syncing to server..."
 rsync -avz --delete \
@@ -22,20 +24,24 @@ rsync -avz --delete \
   "$LOCAL_DIR/" "$SERVER:$REMOTE_DIR/"
 
 echo "Installing dependencies and restarting..."
+NEXT_LOCAL=$(node -p 'require("next/package.json").version')
 ssh -p $SSH_PORT $SERVER "
   set -e
-  cd $REMOTE_DIR &&
-  npm install --production &&
+  cd $REMOTE_DIR
+  # rsync node_modules dizinlerini dışarıda bırakır: standalone, next'i bu dizinin node_modules'undan çözer.
+  # Sürüm derlemedekinden farklıysa sunucu çöker (03.11: ensureInstrumentation is not a function, 502).
+  NODE_OPTIONS=--dns-result-order=ipv4first npm install --omit=dev --no-audit --no-fund
+  [ \"\$(node -p 'require(\"next/package.json\").version')\" = \"$NEXT_LOCAL\" ] || { echo 'next sürümü derlemeyle aynı değil'; exit 1; }
   # Next.js standalone ships only the server bundle — the static/ and public/
   # trees must be co-located under standalone/ manually, otherwise every
   # /_next/static/* asset 404s and the client renders a white screen.
   # https://nextjs.org/docs/app/api-reference/config/next-config-js/output
-  mkdir -p .next/standalone/01dev/cdpilot-site/.next &&
-  rm -rf .next/standalone/01dev/cdpilot-site/.next/static &&
-  cp -r .next/static .next/standalone/01dev/cdpilot-site/.next/ &&
-  if [ -d public ]; then rm -rf .next/standalone/01dev/cdpilot-site/public && cp -r public .next/standalone/01dev/cdpilot-site/; fi &&
-  pm2 delete cdpilot-site 2>/dev/null || true &&
-  pm2 start deploy/ecosystem.config.js &&
+  mkdir -p .next/standalone/.next
+  rm -rf .next/standalone/.next/static
+  cp -r .next/static .next/standalone/.next/
+  if [ -d public ]; then rm -rf .next/standalone/public && cp -r public .next/standalone/; fi
+  pm2 delete cdpilot-site 2>/dev/null || true
+  pm2 start deploy/ecosystem.config.js
   pm2 save
 "
 
