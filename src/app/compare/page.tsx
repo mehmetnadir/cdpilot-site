@@ -80,7 +80,7 @@ const rows: Row[] = [
   },
   {
     label: "MCP server",
-    cdpilot: "Yes — built in (cdpilot mcp), 42 tools",
+    cdpilot: "Yes — built in (cdpilot mcp), 45 tools",
     playwright: "Yes — official @playwright/mcp (Microsoft), separate package, actively maintained",
     puppeteer: "Deprecated — official @modelcontextprotocol/server-puppeteer exists but maintainers now recommend Playwright MCP instead",
     selenium: "No official server; only unverified community projects",
@@ -151,7 +151,7 @@ const faqs = [
   },
   {
     q: "Can cdpilot attach to my existing, already logged-in Chrome session?",
-    a: "Not by default. cdpilot launches its own isolated browser profile (~/.cdpilot/profile) so your personal browser — cookies, history, passwords — is never touched by automation. Its commands talk to whatever CDP endpoint CDP_PORT points at, so a browser you started yourself with --remote-debugging-port can be driven too; that path is not documented yet, and recent Chrome versions only allow remote debugging on a non-default --user-data-dir. To carry a session across runs without attaching (e.g. a passed Cloudflare/DataDome challenge), use cdpilot cookies save/load. Playwright and Puppeteer expose attaching as a first-class API: connectOverCDP() / connect().",
+    a: "Not by default: cdpilot launches its own isolated browser profile (~/.cdpilot/profile) so your personal browser — cookies, history, passwords — is never touched by automation. When you do want your own logged-in browser, cdpilot connect <port> (v0.9.4) attaches to a Chrome/Brave/Vivaldi/Edge you started yourself with --remote-debugging-port and a non-default --user-data-dir (recent Chrome requires one); it never closes, injects into or navigates your tabs. To carry a session across runs without attaching (e.g. a passed Cloudflare/DataDome challenge), use cdpilot cookies save/load. Playwright and Puppeteer offer the same through connectOverCDP() / connect().",
   },
   {
     q: "Does cdpilot support attaching to my own running Chrome?",

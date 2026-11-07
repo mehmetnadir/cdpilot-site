@@ -26,7 +26,7 @@ const tiers: PricingTier[] = [
     description: "Everything you need to get started with browser automation.",
     features: [
       "Forever free — no limits, no signup",
-      "60+ CLI commands",
+      "70+ CLI commands",
       "10 built-in test assertions",
       "Built-in MCP server (Claude Code, Cursor)",
       "a11y-snapshot (structured text, no vision model needed)",
