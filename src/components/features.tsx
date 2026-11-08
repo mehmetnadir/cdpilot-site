@@ -69,6 +69,13 @@ const features: Feature[] = [
       "Click, fill, and select by visible text — like Stagehand's act() but without LLM cost. Fuzzy matching across labels, placeholders, and aria attributes.",
     icon: <Sparkles className="h-5 w-5" />,
   },
+  {
+    number: "08",
+    title: "Frames, Shadow DOM & Replay",
+    description:
+      "One selector walks iframes and open shadow roots: `iframe#pay >>> my-card >>> button`. Record a session once, replay it with {{secrets}} supplied at run time; export any navigation as a masked HAR.",
+    icon: <Layers className="h-5 w-5" />,
+  },
 ];
 
 export function Features() {

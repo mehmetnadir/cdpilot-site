@@ -161,8 +161,8 @@ const faqs = [
 
 const weaknesses = [
   {
-    title: "CSS selectors don't pierce shadow DOM yet",
-    body: "The smart commands (smart-click, smart-fill, smart-select) search open shadow roots, but CSS-selector commands like click and fill don't pierce them yet (GitHub issue #3); Playwright's locators do by default. iframes are covered since 0.9.3: >>> or --frame reaches elements inside frames, cross-origin and nested ones included.",
+    title: "Every CLI call starts a fresh process",
+    body: "cdpilot has no long-lived daemon yet: each command spawns node, then Python, before any CDP work. Measured on 08.11.2026 (M1 Max, connected headless Chrome): status 104-144 ms end to end; a `go` on a static page that the browser paints in 20 ms takes 950-1300 ms; `content` 660-710 ms. Playwright keeps one process alive across calls. A daemon mode and bytecode caching are the next performance work; shadow DOM (`>>>` into open shadow roots, issue #3) shipped in 0.9.5, closed shadow roots stay unreachable by design.",
   },
   {
     title: "Heavy JS-challenge anti-bot walls are still hard",

@@ -889,7 +889,7 @@ export const commands: Command[] = [
     category: "debugging",
     description:
       "Monitor and display all network requests with status codes, types, and URLs.",
-    usage: "cdpilot network [<url>]",
+    usage: "cdpilot network [<url>] [--har <file>]",
     args: [
       {
         name: "url",
@@ -897,6 +897,7 @@ export const commands: Command[] = [
         description: "URL to navigate to and monitor. Uses current page if omitted.",
       },
     ],
+    flags: ["--har <file>", "--har -"],
     examples: [
       {
         code: "npx cdpilot network",
@@ -905,6 +906,10 @@ export const commands: Command[] = [
       {
         code: "npx cdpilot network https://api.example.com",
         description: "Navigate and inspect all requests",
+      },
+      {
+        code: "npx cdpilot network https://shop.example.com --har checkout.har",
+        description: "Export the navigation as HAR 1.2 (cookies, tokens and secret query parameters masked)",
       },
     ],
   },
@@ -1878,6 +1883,49 @@ export const commands: Command[] = [
       {
         code: "CDPILOT_TARGET=<id> cdpilot go example.com",
         description: "Pin all subsequent commands to one context",
+      },
+    ],
+  },
+  // ── Record & replay (0.9.5) ────────────────────────────
+  {
+    name: "record",
+    category: "advanced",
+    description:
+      "Record the CLI commands you run into a portable flow file. Secrets are replaced by {{name}} placeholders before anything is written to disk; failed steps are dropped.",
+    usage: "cdpilot record start [--name <n>] | stop [--save <file.json>] | status | cancel",
+    examples: [
+      {
+        code: "npx cdpilot record start --name login",
+        description: "Start recording; every cdpilot command from now on becomes a step",
+      },
+      {
+        code: "npx cdpilot record stop --save login-flow.json",
+        description: "Write the flow (mode 0600) with secrets as {{password}}-style placeholders",
+      },
+    ],
+  },
+  {
+    name: "replay",
+    category: "advanced",
+    description:
+      "Replay a recorded flow with variable substitution. Variables are validated before any step runs; a failed step stops the replay unless --continue.",
+    usage: "cdpilot replay <flow.json> [--var k=v ...] [--delay real|none|<ms>] [--dry-run] [--continue]",
+    args: [
+      {
+        name: "flow.json",
+        required: true,
+        description: "A flow file written by `record stop --save`.",
+      },
+    ],
+    flags: ["--var k=v", "--delay real|none|<ms>", "--dry-run", "--continue"],
+    examples: [
+      {
+        code: "npx cdpilot replay login-flow.json --var password=$PW",
+        description: "Run the flow with the secret supplied at replay time (or CDPILOT_VAR_PASSWORD)",
+      },
+      {
+        code: "npx cdpilot replay login-flow.json --dry-run",
+        description: "Print the substituted steps without touching the browser; secret values are never printed",
       },
     ],
   },
