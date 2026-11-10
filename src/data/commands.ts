@@ -1929,6 +1929,144 @@ export const commands: Command[] = [
       },
     ],
   },
+  // ── Agent mode & learned flows (0.9.6) ───────────────────
+  {
+    name: "agent observe",
+    category: "ai",
+    description:
+      "Turn the accessibility tree into a numbered list of actions an agent can act on (@ref, role, name, current value) plus a short text summary, without screenshots or raw HTML. With --diff, returns only what changed since the last observe or act (changed.added, changed.removed, changed.value_changed, and text_changed). State lives in ~/.cdpilot/projects/<id>/agent-state.json. MCP: browser_agent_observe.",
+    usage: "cdpilot agent observe [--diff]",
+    flags: ["--diff"],
+    examples: [
+      {
+        code: "npx cdpilot agent observe",
+        description: "Inspect interactive elements with stable refs and token estimate",
+      },
+      {
+        code: "npx cdpilot agent observe --diff",
+        description: "Return only elements and text that changed since the last action",
+      },
+    ],
+  },
+  {
+    name: "agent act",
+    category: "ai",
+    description:
+      "Execute an action on an element by reference (@N) or navigate silently via --url, returning the diff for the next step. injection_suspect marks page text that addresses the model instead of the user (e.g. ignore instructions, system prompt). Typed values are masked in agent state. MCP: browser_agent_act.",
+    usage: "cdpilot agent act <--ref @N | --url <url>> [--action click|type|fill|hover|submit] [--text <str>]",
+    flags: ["--ref @N", "--url <url>", "--action click|type|fill|hover|submit", "--text <str>"],
+    args: [
+      {
+        name: "target",
+        required: true,
+        description: "--ref @N to act on an element or --url <url> to navigate",
+      },
+    ],
+    examples: [
+      {
+        code: "npx cdpilot agent act --ref @3 --action click",
+        description: "Click element @3 from the previous observation and return diff",
+      },
+      {
+        code: "npx cdpilot agent act --ref @4 --action fill --text \"cdpilot\"",
+        description: "Fill text into element @4 and return diff",
+      },
+      {
+        code: "npx cdpilot agent act --url https://example.com/",
+        description: "Navigate silently and return the resulting page diff",
+      },
+    ],
+  },
+  {
+    name: "agent flow",
+    category: "ai",
+    description:
+      "Manage learned agent flows. Subcommands: save <name> [--last N] saves acts since the last navigation to ~/.cdpilot/projects/<id>/flows/<name>.json addressed by accessibility anchors (role, name, position) instead of transient DOM refs; list, show <name>, delete <name>. MCP: browser_agent_flow_save.",
+    usage: "cdpilot agent flow <save <name> [--last N] | list | show <name> | delete <name>>",
+    flags: ["--last N"],
+    args: [
+      {
+        name: "subcommand",
+        required: true,
+        description: "save <name> [--last N] | list | show <name> | delete <name>",
+      },
+    ],
+    examples: [
+      {
+        code: "npx cdpilot agent flow save inbox-triage",
+        description: "Save acts since the last navigation as an anchor-based reusable flow",
+      },
+      {
+        code: "npx cdpilot agent flow list",
+        description: "List all learned flows available for the current project",
+      },
+      {
+        code: "npx cdpilot agent flow show inbox-triage",
+        description: "Display the recorded steps, anchors, and placeholders of a flow",
+      },
+      {
+        code: "npx cdpilot agent flow delete inbox-triage",
+        description: "Delete a saved flow file",
+      },
+    ],
+  },
+  {
+    name: "agent run",
+    category: "ai",
+    description:
+      "Replay a learned agent flow by accessibility anchors with no model in the loop, reporting tokens_avoided. Exits 4 on drift with the live page's full observation so the agent can re-plan; exits 2 for a missing variable or unknown flow. Typed secrets are supplied via --var k=v or CDPILOT_VAR_<NAME>. MCP: browser_agent_run.",
+    usage: "cdpilot agent run <name> [--var k=v ...] [--dry-run]",
+    flags: ["--var k=v", "--dry-run"],
+    args: [
+      {
+        name: "name",
+        required: true,
+        description: "Name of the learned flow to replay",
+      },
+    ],
+    examples: [
+      {
+        code: "npx cdpilot agent run inbox-triage",
+        description: "Replay flow by anchors and output result JSON with tokens_avoided",
+      },
+      {
+        code: "npx cdpilot agent run login --var password=$PW",
+        description: "Supply variable value for a recorded {{password}} placeholder",
+      },
+      {
+        code: "npx cdpilot agent run inbox-triage --dry-run",
+        description: "Preview flow steps with placeholders without executing actions",
+      },
+    ],
+  },
+  {
+    name: "daemon",
+    category: "ai",
+    description:
+      "Manage the warm background Python process behind CDPILOT_DAEMON=1. Keeps one process per project and environment over a local Unix socket, skipping Python startup and module import overhead. Subcommands: start, stop, status. POSIX only.",
+    usage: "cdpilot daemon <start|stop|status>",
+    args: [
+      {
+        name: "subcommand",
+        required: true,
+        description: "start | stop | status",
+      },
+    ],
+    examples: [
+      {
+        code: "npx cdpilot daemon status",
+        description: "Show daemon status: pid, requests served, uptime, socket",
+      },
+      {
+        code: "npx cdpilot daemon start",
+        description: "Start the warm process ahead of time",
+      },
+      {
+        code: "npx cdpilot daemon stop",
+        description: "Stop every running daemon",
+      },
+    ],
+  },
 ];
 
 export function getCommandBySlug(slug: string): Command | undefined {

@@ -80,7 +80,7 @@ const rows: Row[] = [
   },
   {
     label: "MCP server",
-    cdpilot: "Yes — built in (cdpilot mcp), 45 tools",
+    cdpilot: "Yes — built in (cdpilot mcp), 49 MCP tools (51 with WebMCP; an 11-tool core profile)",
     playwright: "Yes — official @playwright/mcp (Microsoft), separate package, actively maintained",
     puppeteer: "Deprecated — official @modelcontextprotocol/server-puppeteer exists but maintainers now recommend Playwright MCP instead",
     selenium: "No official server; only unverified community projects",
@@ -161,8 +161,8 @@ const faqs = [
 
 const weaknesses = [
   {
-    title: "Every CLI call starts a fresh process",
-    body: "cdpilot has no long-lived daemon yet: each command spawns node, then Python, before any CDP work. Measured on 08.11.2026 (M1 Max, connected headless Chrome): status 104-144 ms end to end; a `go` on a static page that the browser paints in 20 ms takes 950-1300 ms; `content` 660-710 ms. Playwright keeps one process alive across calls. A daemon mode and bytecode caching are the next performance work; shadow DOM (`>>>` into open shadow roots, issue #3) shipped in 0.9.5, closed shadow roots stay unreachable by design.",
+    title: "Every CLI call starts a fresh process by default",
+    body: "By default, each command spawns node, then Python, before any CDP work: a browser-free command costs ~270 ms end to end fresh (bytecode cache + remembered interpreter; was ~500 ms). With the opt-in warm process `CDPILOT_DAEMON=1`, a browser-free command drops to ~140 ms (`version` 138 ms, `record status` 149 ms), `content` to ~110 ms, and a warm `go` on a static page to ~230 ms of which ~125 ms is the node launcher. MCP tool calls under the same flag run in the server process, ~10 ms before CDP work instead of ~400 ms. However, Playwright keeps one process alive by default: the launcher cost remains, the default is still a fresh process, and the warm process is opt-in and POSIX only (Windows runs fresh).",
   },
   {
     title: "Heavy JS-challenge anti-bot walls are still hard",

@@ -35,6 +35,7 @@ const tiers: PricingTier[] = [
       "Visual feedback (green glow, cursor, ripples)",
       "Pre-flight wizard (auto-setup)",
       "Workflow recorder & replay (record / replay, 0.9.5)",
+      "Learned flows for agents (agent flow save / agent run, 0.9.6)",
       "Unlimited usage",
       "Community support",
     ],
