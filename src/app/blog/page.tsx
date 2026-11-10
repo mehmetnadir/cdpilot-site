@@ -7,7 +7,7 @@ import { SearchFilter } from "./search-filter";
 export const metadata: Metadata = {
   title: "Blog — cdpilot | Browser Automation Insights",
   description:
-    "Deep dives into browser automation, Chrome DevTools Protocol, AI agent tooling, and zero-dependency engineering. Written by the cdpilot team.",
+    "Deep dives into browser automation, Chrome DevTools Protocol, AI agent tooling, and zero-npm-dependency engineering. Written by the cdpilot team.",
   metadataBase: new URL("https://cdpilot.ndr.ist"),
   alternates: { canonical: "https://cdpilot.ndr.ist/blog" },
   openGraph: {
@@ -34,7 +34,7 @@ const blogJsonLd = {
   name: "cdpilot Blog",
   url: "https://cdpilot.ndr.ist/blog",
   description:
-    "Engineering blog for cdpilot — zero-dependency browser automation CLI.",
+    "Engineering blog for cdpilot — zero-npm-dependency browser automation CLI.",
   publisher: {
     "@type": "Organization",
     name: "cdpilot",
@@ -73,7 +73,7 @@ export default function BlogPage() {
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-lg text-[#a1a1aa]">
               Benchmarks, release notes, architecture deep dives, and the story
-              behind zero-dependency browser automation.
+              behind zero-npm-dependency browser automation.
             </p>
           </div>
         </section>

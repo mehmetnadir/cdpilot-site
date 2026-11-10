@@ -1,6 +1,6 @@
 # cdpilot
 
-> cdpilot is a zero-npm-dependency browser automation CLI for Chrome/Brave/Chromium, built directly on the raw Chrome DevTools Protocol (CDP) instead of Playwright, Puppeteer, or Selenium. It ships as a single Python core file plus a small Node.js launcher (~0.6MB npm package, no node_modules tree), exposes 70+ CLI commands, and includes a built-in MCP server (42 tools) so AI coding agents — Claude Code, Cursor, Windsurf, or any MCP client — can browse, click, fill forms, and read pages via structured accessibility snapshots instead of screenshots (structured text with @ref handles the agent can act on directly, no vision model needed). It also has LLM-free "smart" commands (click/fill by visible text, no CSS selectors, no LLM call needed), 10 built-in test assertions, and a progressive anti-bot layer (three-tier stealth, CAPTCHA + press-and-hold solvers, friction-ladder detection). MIT licensed, free and open source.
+> cdpilot is a zero-npm-dependency browser automation CLI for Chrome/Brave/Chromium, built directly on the raw Chrome DevTools Protocol (CDP) instead of Playwright, Puppeteer, or Selenium. It ships as a single Python core file plus a small Node.js launcher (~1.2 MB unpacked npm package, no node_modules tree), exposes 70+ CLI commands, and includes a built-in MCP server (49 tools, 51 with WebMCP; an 11-tool core profile) so AI coding agents — Claude Code, Cursor, Windsurf, or any MCP client — can browse, click, fill forms, and read pages via structured accessibility snapshots instead of screenshots (structured text with @ref handles the agent can act on directly, no vision model needed). It also has LLM-free "smart" commands (click/fill by visible text, no CSS selectors, no LLM call needed), 10 built-in test assertions, and a progressive anti-bot layer (three-tier stealth, CAPTCHA + press-and-hold solvers, friction-ladder detection). MIT licensed, free and open source.
 
 ## Install
 
@@ -77,7 +77,7 @@ project `.cursor/mcp.json`) both read the same `mcpServers` schema:
   (or attach to a browser you started yourself with `cdpilot connect [<port>|<ws-url>|--auto]`, for human-in-the-loop CAPTCHA/login flows)
 - Heavy JS-challenge anti-bot vendors are still hard: per its own Stealth Bench V1,
   PerimeterX 2/18 (11%), GeeTest 0/4 (0%), Kasada 0/1 (0%), Akamai 1/6 (17%) — cdpilot
-  is an avoidance engine, not a CAPTCHA solver, and counts a blocked task as a failure
+  is an avoidance engine first (BYOK solver plugins are opt-in fallbacks) and counts a blocked task as a failure
 
 ## Links
 

@@ -267,7 +267,7 @@ export const commands: Command[] = [
     name: "stealth",
     category: "stealth",
     description:
-      "Zero-dependency anti-fingerprint layer. Patches navigator.webdriver (smart no-op — only if value is true), chrome.runtime, plugins (proper PluginArray inheritance), WebGL vendor/renderer, permissions, hardwareConcurrency, and Worker constructor. Injected via Page.addScriptToEvaluateOnNewDocument before any page script runs. Disabled by default; opt-in.",
+      "Self-contained anti-fingerprint layer (no extra packages). Patches navigator.webdriver (smart no-op — only if value is true), chrome.runtime, plugins (proper PluginArray inheritance), WebGL vendor/renderer, permissions, hardwareConcurrency, and Worker constructor. Injected via Page.addScriptToEvaluateOnNewDocument before any page script runs. Disabled by default; opt-in.",
     usage: "cdpilot stealth [on|off|status]",
     args: [
       {
@@ -1362,7 +1362,7 @@ export const commands: Command[] = [
     name: "watch",
     category: "ai",
     description:
-      "Video understanding via continuous screencast. Streams JPEG frames (Page.startScreencast) into a ring buffer so an AI agent can query a time window and observe motion — animation, mouse cursor, scroll, transitions — that a single screenshot cannot capture. Works on local file:// and online video (YouTube, Vimeo, Twitter, etc.). DRM players (Netflix) render as black frames and are not supported. Zero dependency; Pillow is optional for motion-detection.",
+      "Video understanding via continuous screencast. Streams JPEG frames (Page.startScreencast) into a ring buffer so an AI agent can query a time window and observe motion — animation, mouse cursor, scroll, transitions — that a single screenshot cannot capture. Works on local file:// and online video (YouTube, Vimeo, Twitter, etc.). DRM players (Netflix) render as black frames and are not supported. No extra package needed; Pillow is optional for motion-detection.",
     usage: "cdpilot watch <start|query|ask|status|stop>",
     args: [
       {
@@ -1792,7 +1792,7 @@ export const commands: Command[] = [
     name: "eval-batch",
     category: "debugging",
     description:
-      "Evaluate N JS expressions in a single Runtime.evaluate roundtrip. Each runs in its own try/catch so one failure doesn't sink the batch. Typical speedup: 5-30x vs sequential eval when reading many small DOM values. MCP: browser_eval_batch.",
+      "Evaluate N JS expressions in a single Runtime.evaluate roundtrip. Each runs in its own try/catch so one failure doesn't sink the batch — one process and one CDP roundtrip instead of N when reading many small DOM values. MCP: browser_eval_batch.",
     usage: "cdpilot eval-batch '<json_array>'",
     args: [
       {
@@ -1952,7 +1952,7 @@ export const commands: Command[] = [
     name: "agent act",
     category: "ai",
     description:
-      "Execute an action on an element by reference (@N) or navigate silently via --url, returning the diff for the next step. injection_suspect marks page text that addresses the model instead of the user (e.g. ignore instructions, system prompt). Typed values are masked in agent state. MCP: browser_agent_act.",
+      "Execute an action on an element by reference (@N) or navigate silently via --url, returning the diff for the next step. injection_suspect marks page text that addresses the model instead of the user (e.g. ignore instructions, system prompt). Values typed into secret-named fields (password, one-time code, API key, PIN, card number…) or token-shaped values are masked; other values are stored as typed. MCP: browser_agent_act.",
     usage: "cdpilot agent act <--ref @N | --url <url>> [--action click|type|fill|hover|submit] [--text <str>]",
     flags: ["--ref @N", "--url <url>", "--action click|type|fill|hover|submit", "--text <str>"],
     args: [
@@ -2014,7 +2014,7 @@ export const commands: Command[] = [
     name: "agent run",
     category: "ai",
     description:
-      "Replay a learned agent flow by accessibility anchors with no model in the loop, reporting tokens_avoided. Exits 4 on drift with the live page's full observation so the agent can re-plan; exits 2 for a missing variable or unknown flow. Typed secrets are supplied via --var k=v or CDPILOT_VAR_<NAME>. MCP: browser_agent_run.",
+      "Replay a learned agent flow by accessibility anchors with no model in the loop, reporting tokens_avoided (an upper bound). Exits 4 on drift with the live page's full observation so the agent can re-plan; exits 2 for a missing variable or unknown flow. Typed secrets are supplied via --var k=v, or CDPILOT_VAR_<NAME> when CDPILOT_VAR_HOSTS names the host the value was recorded on (never in a URL). MCP: browser_agent_run.",
     usage: "cdpilot agent run <name> [--var k=v ...] [--dry-run]",
     flags: ["--var k=v", "--dry-run"],
     args: [
@@ -2027,7 +2027,7 @@ export const commands: Command[] = [
     examples: [
       {
         code: "npx cdpilot agent run inbox-triage",
-        description: "Replay flow by anchors and output result JSON with tokens_avoided",
+        description: "Replay flow by anchors and output result JSON with tokens_avoided (upper bound)",
       },
       {
         code: "npx cdpilot agent run login --var password=$PW",

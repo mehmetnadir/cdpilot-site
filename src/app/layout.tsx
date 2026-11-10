@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "cdpilot — A lightweight Playwright alternative for AI agents | Raw CDP, MCP",
   description:
-    "A lightweight, zero-dependency Playwright alternative built on raw CDP — one Python file, no node_modules. 70+ commands, progressive anti-bot friction ladder, three-tier stealth mode, CAPTCHA + press-and-hold solvers, video understanding, per-host cookie persistence, named proxy pools, TLS fingerprint probe, MCP server for AI agents. Structured a11y-tree snapshots — no vision model needed. No Puppeteer. No Playwright. No Selenium.",
+    "A lightweight, zero-npm-dependency Playwright alternative built on raw CDP — one Python file, no node_modules. 70+ commands, progressive anti-bot friction ladder, three-tier stealth mode, CAPTCHA + press-and-hold solvers, video understanding, per-host cookie persistence, named proxy pools, TLS fingerprint probe, MCP server for AI agents. Structured a11y-tree snapshots — no vision model needed. No Puppeteer. No Playwright. No Selenium.",
   keywords: [
     "browser automation",
     "CDP",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     "assertions",
     "playwright alternative",
     "puppeteer alternative",
-    "zero dependency",
+    "zero npm dependencies",
     "accessibility",
     "web testing",
     "browser testing",
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "cdpilot — Zero-dependency browser automation via raw CDP",
+    title: "cdpilot — Zero-npm-dependency browser automation via raw CDP",
     description:
       "A lightweight Playwright alternative. Raw CDP, 70+ commands, progressive anti-bot friction ladder, three-tier stealth, CAPTCHA + press-and-hold solvers, proxy pools, MCP server. No Puppeteer/Playwright/Selenium.",
     url: "https://cdpilot.ndr.ist",
@@ -75,9 +75,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "cdpilot — Zero-dependency browser automation via raw CDP",
+    title: "cdpilot — Zero-npm-dependency browser automation via raw CDP",
     description:
-      "A lightweight Playwright alternative. 70+ commands, progressive anti-bot friction ladder, three-tier stealth, CAPTCHA + press-and-hold solvers, proxy pools, MCP server. Structured a11y snapshots, no vision model needed. Zero dependencies. No Puppeteer/Playwright/Selenium.",
+      "A lightweight Playwright alternative. 70+ commands, progressive anti-bot friction ladder, three-tier stealth, CAPTCHA + press-and-hold solvers, proxy pools, MCP server. Structured a11y snapshots, no vision model needed. Zero npm dependencies. No Puppeteer/Playwright/Selenium.",
     creator: "@mehmetnadir",
   },
 };
@@ -103,7 +103,7 @@ export default function RootLayout({
               applicationCategory: "DeveloperApplication",
               operatingSystem: "macOS, Linux, Windows",
               offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-              description: "A lightweight Playwright alternative — zero-dependency browser automation CLI built on raw CDP. 70+ commands, progressive anti-bot friction ladder, three-tier stealth mode, CAPTCHA + press-and-hold solvers, video understanding via screencast, per-host cookie persistence, named proxy pools, TLS fingerprint probe, and MCP server for AI agents. Structured a11y-tree snapshots the agent can act on directly — no vision model needed.",
+              description: "A lightweight Playwright alternative — zero-npm-dependency browser automation CLI built on raw CDP. 70+ commands, progressive anti-bot friction ladder, three-tier stealth mode, CAPTCHA + press-and-hold solvers, video understanding via screencast, per-host cookie persistence, named proxy pools, TLS fingerprint probe, and MCP server for AI agents. Structured a11y-tree snapshots the agent can act on directly — no vision model needed.",
               url: "https://cdpilot.ndr.ist",
               downloadUrl: "https://www.npmjs.com/package/cdpilot",
               softwareVersion: "0.9.6",

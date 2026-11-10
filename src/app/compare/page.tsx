@@ -40,7 +40,7 @@ interface Row {
 const rows: Row[] = [
   {
     label: "Install footprint",
-    cdpilot: "1 Python file (~542KB) + small Node launcher (~23KB); npm package ~0.6MB unpacked, no node_modules",
+    cdpilot: "1 Python file (~1.0 MB) + small Node launcher (~51 KB); npm package ~1.2 MB unpacked, no node_modules",
     playwright: "playwright-core ~12.8MB unpacked; browsers (Chromium/Firefox/WebKit) downloaded separately, ~100s of MB total",
     puppeteer: "puppeteer-core ~5.7MB unpacked; bundled Chromium download ~170MB (macOS) to ~280MB (Linux/Windows)",
     selenium: "selenium-webdriver (Node) ~21.8MB unpacked; browser driver binaries (chromedriver etc.) installed separately",
@@ -112,7 +112,7 @@ const rows: Row[] = [
   },
   {
     label: "Attach to an existing / logged-in browser session",
-    cdpilot: "Not by default — it launches an isolated profile so your personal browser is never touched. Commands drive whatever CDP endpoint CDP_PORT points at, so a browser you started with --remote-debugging-port works too (undocumented path). Passed challenges can also be carried via cookies save/load",
+    cdpilot: "Not by default — it launches an isolated profile so your personal browser is never touched. Commands drive whatever CDP endpoint CDP_PORT points at, so a browser you started with --remote-debugging-port works too: `cdpilot connect <port>` (v0.9.4) attaches to it. Passed challenges can also be carried via cookies save/load",
     playwright: "Yes — chromium.connectOverCDP()",
     puppeteer: "Yes — puppeteer.connect({ browserWSEndpoint })",
     selenium: "Partial — Chrome-only, via the debuggerAddress capability",
@@ -139,11 +139,11 @@ const rows: Row[] = [
 const faqs = [
   {
     q: "What's a lightweight alternative to Playwright for AI coding agents?",
-    a: "cdpilot is a single-file, zero-npm-dependency CLI that talks directly to Chrome via the DevTools Protocol (CDP) — no Playwright/Puppeteer/Selenium runtime, no bundled browser download, no node_modules tree. It ships a built-in MCP server (42 tools) so AI agents like Claude Code or Cursor can drive a browser with one config block, plus LLM-free \"smart\" commands (click/fill by visible text) that Playwright's own MCP server doesn't have.",
+    a: "cdpilot is a single-file, zero-npm-dependency CLI that talks directly to Chrome via the DevTools Protocol (CDP) — no Playwright/Puppeteer/Selenium runtime, no bundled browser download, no node_modules tree. It ships a built-in MCP server (49 MCP tools, 51 with WebMCP; an 11-tool core profile) so AI agents like Claude Code or Cursor can drive a browser with one config block, plus LLM-free \"smart\" commands (click/fill by visible text) that Playwright's own MCP server doesn't have.",
   },
   {
     q: "Is there a small, dependency-free MCP server for browser control?",
-    a: "cdpilot's MCP server (cdpilot mcp) is that: it's part of the same ~0.6MB npm package as the CLI, adds zero npm dependencies, and exposes accessibility-tree snapshots — structured text with @ref handles the agent can act on directly, no vision model needed — plus click/type/extract/test-assertion tools. Compare that to Playwright's official @playwright/mcp, which is excellent but pulls in the full Playwright browser-automation stack, or Puppeteer's official MCP server, which its own maintainers now mark deprecated in favor of Playwright MCP.",
+    a: "cdpilot's MCP server (cdpilot mcp) is that: it's part of the same ~1.2 MB unpacked npm package as the CLI, adds zero npm dependencies, and exposes accessibility-tree snapshots — structured text with @ref handles the agent can act on directly, no vision model needed — plus click/type/extract/test-assertion tools. Compare that to Playwright's official @playwright/mcp, which is excellent but pulls in the full Playwright browser-automation stack, or Puppeteer's official MCP server, which its own maintainers now mark deprecated in favor of Playwright MCP.",
   },
   {
     q: "How does cdpilot compare to browser-use for AI browser agents?",
@@ -166,7 +166,7 @@ const weaknesses = [
   },
   {
     title: "Heavy JS-challenge anti-bot walls are still hard",
-    body: "cdpilot's own Stealth Bench V1 (v0.5.3, 80 tasks) is explicit about this: PerimeterX 2/18 (11%), GeeTest 0/4 (0%), Kasada 0/1 (0%), Akamai 1/6 (17%). cdpilot describes itself as \"an avoidance engine, not a CAPTCHA solver\" — when a challenge blocks progress and can't be bypassed, the task fails, and that's counted honestly rather than hidden.",
+    body: "cdpilot's own Stealth Bench V1 (v0.5.3, 80 tasks) is explicit about this: PerimeterX 2/18 (11%), GeeTest 0/4 (0%), Kasada 0/1 (0%), Akamai 1/6 (17%). cdpilot describes itself as \"an avoidance engine first\"; its BYOK solver plugins are opt-in fallbacks — when a challenge blocks progress and can't be bypassed, the task fails, and that's counted honestly rather than hidden.",
   },
   {
     title: "Smaller ecosystem and test-assertion surface",

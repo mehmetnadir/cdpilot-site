@@ -287,7 +287,7 @@ export default async function BlogPostPage(props: PageProps) {
                 <div>
                   <p className="font-semibold text-white">cdpilot team</p>
                   <p className="mt-1 text-sm text-[#a1a1aa]">
-                    Building zero-dependency browser automation for developers and AI agents.{" "}
+                    Building zero-npm-dependency browser automation for developers and AI agents.{" "}
                     <a href="https://github.com/mehmetnadir/cdpilot" className="text-[#22c55e] hover:underline">
                       github.com/mehmetnadir/cdpilot
                     </a>

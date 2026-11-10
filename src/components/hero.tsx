@@ -50,7 +50,7 @@ export function Hero() {
 
         {/* Sub-headline */}
         <p className="mx-auto mt-6 max-w-2xl text-lg text-[#a1a1aa] sm:text-xl">
-          Zero dependencies. Raw CDP. Smart interactions — no CSS selectors, no LLM needed.
+          Zero npm dependencies. Raw CDP. Smart interactions — no CSS selectors, no LLM needed.
           <br className="hidden sm:block" />
           Progressive anti-bot resilience: three-tier stealth, CAPTCHA + press-and-hold solvers, proxy pools, video understanding.
           <br className="hidden sm:block" />

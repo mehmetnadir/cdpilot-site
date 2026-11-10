@@ -170,3 +170,32 @@ test("every example's transcript excerpt appears verbatim in its origin/main tra
     );
   }
 });
+
+test("site copy keeps the 0.9.6 audit fixes", () => {
+  const hits = [];
+  for (const f of COPY) {
+    const rel = f.replace(ROOT, "");
+    const lines = readFileSync(f, "utf8").split("\n");
+    lines.forEach((line, i) => {
+      if (/zero[- ]dependenc/i.test(line) && !/npm|Is it really zero dependencies\?/.test(line)) {
+        hits.push(`${rel}:${i + 1} zero dependencies without npm: ${line.trim()}`);
+      }
+      if (/42 tools|not a CAPTCHA solver/i.test(line)) {
+        hits.push(`${rel}:${i + 1} stale claim: ${line.trim()}`);
+      }
+      if (/5-30x/i.test(line)) {
+        hits.push(`${rel}:${i + 1} 5-30x: ${line.trim()}`);
+      }
+      if (/99\.9% uptime/i.test(line)) {
+        hits.push(`${rel}:${i + 1} 99.9% uptime: ${line.trim()}`);
+      }
+      if (/Most Popular/i.test(line)) {
+        hits.push(`${rel}:${i + 1} Most Popular: ${line.trim()}`);
+      }
+      if (/undocumented path/i.test(line)) {
+        hits.push(`${rel}:${i + 1} undocumented path: ${line.trim()}`);
+      }
+    });
+  }
+  assert.deepEqual(hits, []);
+});
