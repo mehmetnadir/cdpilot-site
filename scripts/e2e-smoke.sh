@@ -42,7 +42,19 @@ cat > "$REPORT" <<EOF
 
 EOF
 
-trap '$CDPILOT stop > /dev/null 2>&1 || true' EXIT
+# Shared headless browser first (one browser pool on this Mac: ortak-tarayici, port 9333):
+# attach with `connect`, close only our own tabs at the end. Launch an isolated one only
+# when no shared browser is running (CI, other machines).
+SHARED_PORT="${SMOKE_SHARED_PORT:-9333}"
+SHARED=0
+if /usr/bin/curl -s -m 3 "http://127.0.0.1:$SHARED_PORT/json/version" > /dev/null 2>&1; then SHARED=1; fi
+# CDP_PORT above points at the isolated port; a connected browser must not be overridden by it.
+if [[ "$SHARED" == "1" ]]; then
+  export CDP_PORT="$SHARED_PORT"
+  trap '$CDPILOT close --keep > /dev/null 2>&1 || true' EXIT
+else
+  trap '$CDPILOT stop > /dev/null 2>&1 || true' EXIT
+fi
 
 # === 2. HTTP CONTRACT ========================================================
 log "HTTP"
@@ -52,12 +64,16 @@ for p in / /examples /compare /llms.txt /sitemap.xml /examples/connect.png; do
 done
 code=$(status /this-page-does-not-exist)
 [[ "$code" == "404" ]] && ok "unknown path → 404" || fail "unknown path → $code (want 404)"
-/usr/bin/curl -s "$BASE_URL/sitemap.xml" | /usr/bin/grep -q "/examples" \
+SITEMAP=$(/usr/bin/curl -s -m 15 "$BASE_URL/sitemap.xml"); /usr/bin/grep -q "/examples" <<< "$SITEMAP" \
   && ok "sitemap lists /examples" || fail "sitemap misses /examples"
 
 # === 3. RENDER (cdpilot) =====================================================
 log "Browser"
-$CDPILOT launch > /dev/null 2>&1 || { fail "cdpilot launch failed"; }
+if [[ "$SHARED" == "1" ]]; then
+  $CDPILOT connect "$SHARED_PORT" > /dev/null 2>&1 || { fail "cdpilot connect $SHARED_PORT failed"; }
+else
+  $CDPILOT launch > /dev/null 2>&1 || { fail "cdpilot launch failed"; }
+fi
 
 # Landing: the version badge shows the version in package.json of the cdpilot repo on npm.
 $CDPILOT go "$BASE_URL/" > /dev/null 2>&1; sleep 1
