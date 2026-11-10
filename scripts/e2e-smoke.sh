@@ -79,7 +79,12 @@ fi
 $CDPILOT go "$BASE_URL/" > /dev/null 2>&1; sleep 1
 shot 01-landing
 NPM_VER=$(npm view cdpilot version 2>/dev/null || echo "")
-BADGE=$(eval_js "(document.body.innerText.match(/v\\d+\\.\\d+\\.\\d+ on npm/)||[''])[0]")
+# Under load the first eval can come back empty (11.11 deploy: badge '' while the page showed it); poll 5 x 1 s.
+BADGE=""
+for _ in 1 2 3 4 5; do
+  BADGE=$(eval_js "(document.body.innerText.match(/v\\d+\\.\\d+\\.\\d+ on npm/)||[''])[0]")
+  [[ -n "$BADGE" ]] && break; sleep 1
+done
 if [[ -n "$NPM_VER" && "$BADGE" == "v$NPM_VER on npm" ]]; then
   ok "landing badge = npm version ($BADGE)"
 else
