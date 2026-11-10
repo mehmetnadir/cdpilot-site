@@ -20,7 +20,7 @@ export function Nav() {
     fetch("https://api.github.com/repos/mehmetnadir/cdpilot")
       .then((r) => r.json())
       .then((d) => { if (d.stargazers_count != null) setStars(d.stargazers_count); })
-      .catch(() => {});
+      .catch((e) => console.warn("cdpilot-site: GitHub star count unavailable", e));
   }, []);
 
   const links = [
