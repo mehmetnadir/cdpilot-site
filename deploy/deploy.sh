@@ -46,6 +46,12 @@ ssh -p $SSH_PORT $SERVER "
 "
 
 echo ""
+# pm2 restart leaves a few seconds of 502 (11.11: GET / and /examples 502 in the smoke, 200 seconds later)
+echo "Waiting for the app to answer..."
+for _ in $(seq 1 30); do
+  [ "$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 https://cdpilot.ndr.ist/)" = "200" ] && break
+  sleep 1
+done
 echo "Smoke-testing static asset..."
 ASSET=$(curl -s --max-time 10 https://cdpilot.ndr.ist/ | grep -oE 'src="/_next/static/[^"]*\.js"' | head -1 | sed 's/src="//;s/"//')
 if [ -n "$ASSET" ]; then
