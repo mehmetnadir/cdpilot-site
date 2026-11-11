@@ -218,4 +218,38 @@ Built <repo>/cdpilot.mcpb`,
     screenshot: "/examples/plugin-install.png",
     githubUrl: "https://github.com/mehmetnadir/cdpilot/tree/main/examples/plugin-install",
   },
+  {
+    id: "canvas",
+    name: "canvas",
+    title: "Live canvas (experimental)",
+    description:
+      "An agent writes HTML into a tab of its own and updates it in place. Clicks and form input come back as JSON events. macOS and Linux only (not Windows yet). The canvas can reach only the hosts you allow with --allow-net; every other request is refused.",
+    commands: `cdpilot connect 9333
+cdpilot canvas open --name demo
+emit_html_chunks | cdpilot canvas stream --name demo
+cdpilot canvas events --name demo --follow
+cdpilot shot output/screenshot.png
+cdpilot canvas close --name demo
+cdpilot disconnect`,
+    transcriptExcerpt: `$ cdpilot connect 9333
+⚠  This browser's cookies and sessions are accessible to cdpilot commands.
+✓ Connected to HeadlessChrome/152.0.7977.30 on port 9333
+  WebSocket: ws://127.0.0.1:9333/devtools/browser/<id>
+  Tabs: <n>
+  Commands now run in YOUR browser; cdpilot will never close it.
+$ cdpilot canvas open --name demo
+canvas: demo <targetId>
+$ emit_html_chunks | cdpilot canvas stream --name demo
+ok 1 patches (0 coalesced) <n> ms 233 bytes
+$ cdpilot canvas events --name demo --follow   # stopped with SIGINT after click
+{"seq":1,"t":<ms>,"src":"page","type":"click","action":"sort_price","id":"sort-btn","data":{}}
+$ cdpilot shot output/screenshot.png
+output/screenshot.png (<size>)
+$ cdpilot canvas close --name demo
+closed demo
+$ cdpilot disconnect
+Disconnected from HeadlessChrome/152.0.7977.30 (port 9333); your browser keeps running.`,
+    screenshot: "/examples/canvas.png",
+    githubUrl: "https://github.com/mehmetnadir/cdpilot/tree/main/examples/canvas",
+  },
 ];
